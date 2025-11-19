@@ -114,9 +114,9 @@ gobuster dir -u http://10.10.73.22:8080 \
 
 ### 5. 🧩 Identifying WebSocket + SSRF Behavior
 
-Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly, The JavaScript in the page source confirms that burn.html was meant to use a WebSocket for token burning, but since the service is intentionally disabled, the page is just a dead end for now. 
+Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly, The JavaScript in the page source confirms that burn.html was meant to use a WebSocket for token burning. The functionality was intentionally disabled, but the implementation revealed how service‑reachability checks were performed—an important clue for discovering SSRF behavior.
 
-After examining http://10.10.73.22:8080/services.html, the webpage displayed a list of services:
+After examining `http://10.10.73.22:8080/services.html`, the webpage displayed a list of services:
 - http://bandito.websocket.thm: OFFLINE
 - http://bandito.public.thm: ONLINE
 
@@ -190,6 +190,8 @@ Host: 10.10.169.87:8080
 - This is a powerful technique for gaining access to internal/forbidden endpoints that are normally not directly reachable from the outside.
 - Note: only use such techniques in authorized lab or CTF environments.
 
+This type of SSRF–WebSocket chaining is uncommon because it requires a misconfigured proxy that incorrectly trusts upgrade responses. When present, however, it can completely break network isolation.
+
 ---
 
 ### 7. 🔓 Admin Credentials & Flag 1
@@ -226,6 +228,9 @@ https://10.10.73.22/access
 **Impact:**
 The leaked credentials granted direct access to the administrative interface, effectively bypassing all authentication controls. Anyone able to trigger the SSRF endpoint could gain full system access.
 
+**Remediation:**
+Implement strict allowlisting for all outbound requests, disable dynamic URL fetching entirely, and prevent 101 responses from being forwarded unless the connection originates from approved WebSocket routes.
+
 ---
 
 ### 8. 💥 Flag 2 — HTTP/2 Request Smuggling (H2.CL)
@@ -239,11 +244,21 @@ POST /send_message HTTP/2
 - In Burp Suite, disable the **"Update Content-Length"** option so that Burp does not correct the header.  
 - If the proxy downgrades the request to HTTP/1.1 and the backend processes the (incorrect) `Content-Length`, a **desynchronization (H2.CL)** can occur — causing the embedded extra data to be interpreted as a new request.
 
+```scss
+Client (HTTP/2)
+        ↓
+Frontend Proxy (H2 → H1 downgrade)
+        ↓
+Backend Server (HTTP/1.1 only)
+        ↓
+Desync caused by conflicting Content-Length
+```
+
 **Technical observation:**  
 HTTP/2 normally ignores `Content-Length` headers; an error in response to such a header suggests that the frontend proxy downgraded the H2 request to H1 (where `Content-Length` **is** honored).
 
 **Why Varnish is relevant:**  
-Varnish does not natively handle HTTP/2 and relies on a frontend proxy that translates or downgrades HTTP/2 to HTTP/1.1. In such setups, desynchronization opportunities are more likely, enabling request smuggling.
+Since Varnish cannot natively process HTTP/2, the deployment relied on a translating proxy. These downgrade layers are known to introduce inconsistencies in header handling, making them susceptible to desynchronization.
 
 #### Example of a smuggle payload (conceptual / anonymized)
 ```http
@@ -275,7 +290,7 @@ In this architecture, the frontend accepted HTTP/2 but the backend (like Varnish
 ## Flags found
 
 | 🏷️ Flag   | Technique                         | Impact                     | Value        |
-| ---------- | ---------------------------------|------- | ---------------------------------|
+| ---------- | ---------------------------------|--------------------------- | -------------|
 | Admin Flag | SSRF + WebSocket chaining        |Full access to internal API | `THM{REDACTED}` |
 | Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling|Request desync → backend code execution path | `THM{REDACTED}` |
 
@@ -302,3 +317,7 @@ This room combines multiple layers of web exploits into a single attack path:
 - HTTP standards and implementations are not always applied correctly; this enables advanced techniques such as request smuggling.  
 - Patience, systematic testing, and experimentation are essential for this type of lab — try small variations and log everything carefully.
 
+### Lessons Learned
+- Protocol downgrade paths should be audited explicitly.
+- WebSocket upgrade flows require strict validation.
+- SSRF is more dangerous when combined with protocol-level behavior.
