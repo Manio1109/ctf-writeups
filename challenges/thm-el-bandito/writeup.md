@@ -276,6 +276,6 @@ THM{Redacted}
 
 ## Room links
 
-📸 [screenshots](challenges/thm-el-bandito/screenshots.md)
+📸 [screenshots](../../thm-el-bandito/screenshots.md)
 
 🔗 [TryHackMe - El bandito](https://tryhackme.com/room/elbandito)
