@@ -114,8 +114,9 @@ gobuster dir -u http://10.10.73.22:8080 \
 
 ### 5. 🧩 Identifying WebSocket + SSRF Behavior
 
-Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly. The webpage displayed a list of services:
+Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly, The JavaScript in the page source confirms that burn.html was meant to use a WebSocket for token burning, but since the service is intentionally disabled, the page is just a dead end for now. 
 
+After examining http://10.10.73.22:8080/services.html, the webpage displayed a list of services:
 - http://bandito.websocket.thm: OFFLINE
 - http://bandito.public.thm: ONLINE
 
@@ -221,6 +222,10 @@ THM{REDACTED}
 ```arduino
 https://10.10.73.22/access
 ```
+
+**Impact:**
+The leaked credentials granted direct access to the administrative interface, effectively bypassing all authentication controls. Anyone able to trigger the SSRF endpoint could gain full system access.
+
 ---
 
 ### 8. 💥 Flag 2 — HTTP/2 Request Smuggling (H2.CL)
@@ -262,15 +267,17 @@ Refreshing `/getMessages` produced several `null entries` — indicating that th
 ```text
 THM{Redacted}
 ```
+**Conclusion**
+In this architecture, the frontend accepted HTTP/2 but the backend (like Varnish or another H1‑only service) required HTTP/1.1. This mismatch made the system vulnerable to H2.CL desynchronization, one of the rarest but most impactful forms of request smuggling.
 
 ---
 
 ## Flags found
 
-| 🏷️ Flag   | Technique                         | Value        |
-| ---------- | --------------------------------- | ------------ |
-| Admin Flag | SSRF + WebSocket chaining         | `[REDACTED]` |
-| Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling | `[REDACTED]` |
+| 🏷️ Flag   | Technique                         | Impact                     | Value        |
+| ---------- | ---------------------------------|------- | ---------------------------------|
+| Admin Flag | SSRF + WebSocket chaining        |Full access to internal API | `[REDACTED]` |
+| Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling|Request desync → backend code execution path | `[REDACTED]` |
 
 ---
 
