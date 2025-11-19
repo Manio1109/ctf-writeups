@@ -114,7 +114,7 @@ gobuster dir -u http://10.10.73.22:8080 \
 
 ### 5. 🧩 Identifying WebSocket + SSRF Behavior
 
-Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly, The JavaScript in the page source confirms that burn.html was meant to use a WebSocket for token burning. The functionality was intentionally disabled, but the implementation revealed how service‑reachability checks were performed—an important clue for discovering SSRF behavior.
+Upon inspecting `http://10.10.73.22:8080/burn.html`, it was observed that the WebSocket was not functioning correctly. The JavaScript in the page source confirms that burn.html was meant to use a WebSocket for token burning. The functionality was intentionally disabled, but the implementation revealed how service‑reachability checks were performed—an important clue for discovering SSRF behavior.
 
 After examining `http://10.10.73.22:8080/services.html`, the webpage displayed a list of services:
 - http://bandito.websocket.thm: OFFLINE
