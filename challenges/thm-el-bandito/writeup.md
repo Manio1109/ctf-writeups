@@ -49,7 +49,7 @@ nmap -sV -p- -T4 10.10.73.22
 
 ---
 
-### 2. 📜 Eerste verkenning van webroot
+### 2. 📜 Initial Webroot Reconnaissance
 
 **Visit:** `https://10.10.73.22:80/`  
 **Output:** `nothing to see here`
@@ -90,7 +90,7 @@ The directories `/static/` and `/access` appear to be useful entry points for fu
 
 ---
 
-### 4. 🔍 8080-port onderzoek
+### 4. 🔍 8080-port enumeration
 
 ```bash
 gobuster dir -u http://10.10.73.22:8080 \
@@ -276,8 +276,8 @@ In this architecture, the frontend accepted HTTP/2 but the backend (like Varnish
 
 | 🏷️ Flag   | Technique                         | Impact                     | Value        |
 | ---------- | ---------------------------------|------- | ---------------------------------|
-| Admin Flag | SSRF + WebSocket chaining        |Full access to internal API | `[REDACTED]` |
-| Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling|Request desync → backend code execution path | `[REDACTED]` |
+| Admin Flag | SSRF + WebSocket chaining        |Full access to internal API | `THM{REDACTED}` |
+| Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling|Request desync → backend code execution path | `THM{REDACTED}` |
 
 ---
 
