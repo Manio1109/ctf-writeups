@@ -145,4 +145,33 @@ Retrieved Flag:
 THM{REDACTED}
 ```
 
+---
+
+## 🏁 Flags Collected
+
+| Flag         | Location            | Value                    |
+| ------------ | ------------------- | ------------------------ |
+| 🧍 User Flag | Authenticated Panel | `THM{REDACTED}`      |
+| 👑 Root Flag | `/home/ubuntu`      | `THM{REDACTED}` |
+
+## 🔗 Room Links
+
+📸 [**Screenshots:**]  
+[View screenshots](../../assets/screenshots_hammer.md)
+
+🔗 [**TryHackMe Room:**](https://tryhackme.com/room/hammer)
+
+---
+
+## 💭 Reflectie
+
+This room provided a solid mix of techniques, including directory fuzzing, JWT manipulation,  
+and command injection. Working with JWT secrets and forging tokens to obtain admin privileges  
+was especially insightful.
+
+The step-by-step progression — from enumeration to full remote code execution — showed how  
+small weaknesses can chain together into a complete system compromise. Tools like **ffuf**,  
+**Burp Suite**, and custom **Python scripting** proved essential throughout the process.
+
+Overall, a challenging and valuable room that helped sharpen my penetration testing skills.
 
