@@ -18,7 +18,8 @@ My goal is to present structured, professional case studies that demonstrate pra
 
 ## 🧠 Summary
 
-Hammer is a medium-difficulty web exploitation challenge focused on abusing weaknesses in authentication logic and insecure token handling.  
+This assessment simulates a real-world web application compromise focused on abusing weaknesses in authentication logic and insecure token handling.
+
 The compromise path involves directory discovery, log leakage, a 4-digit PIN password-reset bypass, and ultimately privilege escalation through forged JWT tokens, resulting in full remote code execution.
 
 ### Key Themes
