@@ -5,10 +5,16 @@ The challenge involves chaining several advanced web exploitation techniques, in
 
 ---
 
-## 📁 Repository Structure
+## 📁 Files in This Directory
 
----
+- **writeup.md**  
+  Full detailed write-up of the entire exploitation chain, including payloads, methodology, and analysis.
 
+- **screenshots.md**  
+  Screenshots taken during the challenge to support the write-up (Burp Suite traffic, SSRF responses, smuggling output, etc.).
+
+- **README.md**  
+  This file — high‑level summary of the challenge and structure.
 
 ---
 
