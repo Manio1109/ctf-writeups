@@ -94,5 +94,55 @@ THM{REDACTED}
 
 ---
 
+## 6. 💻 Command Injection Discovery
+
+Inside the authenticated panel, a command execution field accepted only limited input.  
+Although most commands were filtered, the command `ls` successfully executed.
+
+**This revealed an interesting file:**
+```text
+188ade1.key
+```
+
+**Inspecting it showed the JWT secret key:**
+```text
+56058354efb3daa97ebab00fabd7a7d7
+```
+This secret key became crucial for escalating privileges later in the attack.
+
+---
+
+## 7. 🛡️ JWT Token Exploitation
+
+With the discovered JWT secret key, the existing session token could be decoded and modified.  
+Using **jwt.io**, the token was loaded and the payload was edited to escalate privileges.
+
+### Steps:
+1. Load the original JWT in jwt.io  
+2. Insert the secret key to allow signature generation  
+3. Modify the payload field: "user"→"admin"
+4. Generate a new, valid token with admin privileges:
+```text
+### Final Modified Token:
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Ii92YXIvd3d3L2h0bWwvMTg4YWRlMS5rZXkifQ.eyJpc3MiOiJodHRwOi8vaGFtbWVyLnRobSIsImF1ZCI6Imh0dHA6Ly9oYW1tZXIudGhtIiwiaWF0IjoxNzUzODE3NjM5LCJleHAiOjE3NTM4MjEyMzksImRhdGEiOnsidXNlcl9pZCI6MSwiZW1haWwiOiJ0ZXN0ZXJAaGFtbWVyLnRobSIsInJvbGUiOiJhZG1pbiJ9fQ.89bKAVq7f0ytB5aFIXtvrK2_I0wV9vJSR83ihrS40O0
+```
+This token granted full administrative access.
+
+---
+
+## 8. 📬 Token Abuse for RCE
+
+With the newly forged admin JWT, privileged functionality became accessible.  
+Using **Burp Suite**, an authenticated request was intercepted and modified to execute system commands.
+
+The following command was injected to retrieve the final flag:
+
+```bash
+cat /home/ubuntu/flag.txt
+```
+Retrieved Flag:
+```text
+THM{REDACTED}
+```
 
 
