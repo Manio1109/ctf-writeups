@@ -75,7 +75,7 @@ ffuf -u http://10.10.51.17:1337/FUZZ/ \
 ```
 
 **The file contained a leaked email address:**
-```css
+```text
 tester@hammer.thm
 ```
 This would later be used during the password reset process.
