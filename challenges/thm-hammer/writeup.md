@@ -35,8 +35,7 @@ This room showcases how small oversights — like exposed logs or hard‑coded s
 nmap -sV -p- -T4 10.10.81.17
 ```
 
-## Open Ports
-
+**Open Ports**
 - **22/tcp** — SSH  
 - **1337/tcp** — HTTP service
 
@@ -122,8 +121,9 @@ Using **jwt.io**, the token was loaded and the payload was edited to escalate pr
 2. Insert the secret key to allow signature generation  
 3. Modify the payload field: "user"→"admin"
 4. Generate a new, valid token with admin privileges:
+
+**Final Modified Token:**
 ```text
-### Final Modified Token:
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Ii92YXIvd3d3L2h0bWwvMTg4YWRlMS5rZXkifQ.eyJpc3MiOiJodHRwOi8vaGFtbWVyLnRobSIsImF1ZCI6Imh0dHA6Ly9oYW1tZXIudGhtIiwiaWF0IjoxNzUzODE3NjM5LCJleHAiOjE3NTM4MjEyMzksImRhdGEiOnsidXNlcl9pZCI6MSwiZW1haWwiOiJ0ZXN0ZXJAaGFtbWVyLnRobSIsInJvbGUiOiJhZG1pbiJ9fQ.89bKAVq7f0ytB5aFIXtvrK2_I0wV9vJSR83ihrS40O0
 ```
 This token granted full administrative access.
@@ -135,12 +135,11 @@ This token granted full administrative access.
 With the newly forged admin JWT, privileged functionality became accessible.  
 Using **Burp Suite**, an authenticated request was intercepted and modified to execute system commands.
 
-The following command was injected to retrieve the final flag:
-
+**The following command was injected to retrieve the final flag:**
 ```bash
 cat /home/ubuntu/flag.txt
 ```
-Retrieved Flag:
+**Retrieved Flag:**
 ```text
 THM{REDACTED}
 ```
@@ -174,3 +173,8 @@ small weaknesses can chain together into a complete system compromise. Tools lik
 
 Overall, a challenging and valuable room that helped sharpen my penetration testing skills.
 
+### 🎯 Key Takeaways
+- Weak directory naming conventions can leak internal structure  
+- Logs often expose sensitive data  
+- Hardcoded JWT secrets = instant privilege escalation  
+- Chaining small findings leads to full system compromise  
