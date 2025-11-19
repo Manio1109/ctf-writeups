@@ -47,7 +47,7 @@ By inspecting the page source, a suspicious directory reference appeared:
 ```nginx
 hmr_directory_name
 ```
-This hinted at where hidden functionality might exist.
+This suggested the presence of hidden functionality.
 
 ---
 
@@ -163,7 +163,7 @@ break
 As soon as one thread finds a valid PIN, all other threads are stopped early.
 This prevents unnecessary traffic and speeds up completion.
 
-**🎯 Result**
+**Result**
 
 The script successfully brute-forced the correct 4-digit PIN, allowing the password reset to complete and granting access to the account.
 This ultimately led to the discovery of the first flag.
