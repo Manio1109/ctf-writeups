@@ -156,10 +156,9 @@ THM{REDACTED}
 
 ## 🔗 Room Links
 
-📸 [**Screenshots:**]  
-[View screenshots](../../assets/screenshots_hammer.md)
+📸 [**Screenshots**](../../challenges/thm-hammer/screenshots.md)
 
-🔗 [**TryHackMe Room:**](https://tryhackme.com/room/hammer)
+🔗 [**TryHackMe Room**](https://tryhackme.com/room/hammer)
 
 ---
 
