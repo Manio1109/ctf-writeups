@@ -7,11 +7,18 @@
 
 ---
 
-## 🧠 Summary  
-**Hammer** is a Medium‑difficulty TryHackMe room focused on analyzing and breaking weak authentication logic.  
-The challenge walks you through identifying hidden directories, extracting sensitive information, manipulating JWT tokens, and ultimately escalating privileges to achieve **Remote Code Execution (RCE)**.
+## 🧠 Summary
 
-This room showcases how small oversights — like exposed logs or hard‑coded secrets — can quickly chain together into full system compromise.
+Hammer is a medium-difficulty web exploitation challenge focused on abusing weaknesses in authentication logic and insecure token handling.  
+The compromise path involves directory discovery, log leakage, a 4-digit PIN password-reset bypass, and ultimately privilege escalation through forged JWT tokens, resulting in full remote code execution.
+
+### Key Themes
+- Targeted enumeration and directory discovery  
+- Sensitive data exposure through application logs  
+- Bypassing the password-reset flow via PIN brute-forcing  
+- JWT analysis, secret leakage, and token forging  
+- Privilege escalation to admin  
+- Remote code execution through command injection  
 
 ---
 
