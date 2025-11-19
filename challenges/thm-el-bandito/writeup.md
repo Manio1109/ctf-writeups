@@ -279,3 +279,19 @@ THM{Redacted}
 📸 [screenshots](../../challenges/thm-el-bandito/screenshots.md)
 
 🔗 [TryHackMe - El bandito](https://tryhackme.com/room/elbandito)
+
+---
+
+## 💭 Reflection
+
+This room combines multiple layers of web exploits into a single attack path:
+
+- **SSRF exploitation** through WebSocket upgrade headers.  
+- **Proxy deception** by returning a `101 Switching Protocols` response.  
+- **HTTP/2 → HTTP/1.1 downgrade** (H2.CL desynchronization) — rare but powerful, especially when combined with Varnish-based caching layers.
+
+### Key Takeaways
+- Proxies are often the weakest link between layers — misconfigurations or incorrect protocol conversions can open the door to complex attack chains.  
+- HTTP standards and implementations are not always applied correctly; this enables advanced techniques such as request smuggling.  
+- Patience, systematic testing, and experimentation are essential for this type of lab — try small variations and log everything carefully.
+
