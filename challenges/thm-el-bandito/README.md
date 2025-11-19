@@ -71,9 +71,9 @@ Never perform these techniques on systems without explicit permission.
 
 ## 🔗 Useful Links
 
-- **TryHackMe Room:** https://tryhackme.com/room/elbandito  
-- **Write-up:** `/challenges/thm-el-bandito/writeup.md`  
-- **Screenshots:** `/challenges/thm-el-bandito/screenshots.md`
+- [**TryHackMe Room**](https://tryhackme.com/room/elbandito)
+- [**Write-up**](../../challenges/thm-el-bandito/writeup.md) 
+- [**Screenshots**](../../challenges/thm-el-bandito/screenshots.md)
 
 ---
 
