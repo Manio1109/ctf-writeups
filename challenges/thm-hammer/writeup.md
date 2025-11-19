@@ -5,6 +5,11 @@
 
 🔗 [View the room on TryHackMe](https://tryhackme.com/room/hammer)
 
+> **Disclaimer:**  
+> This write-up is for educational and professional demonstration purposes only.  
+> All testing was performed in a controlled, authorized environment (TryHackMe).  
+> No techniques described here were used against real-world systems.
+
 ---
 
 ## 🧠 Summary
