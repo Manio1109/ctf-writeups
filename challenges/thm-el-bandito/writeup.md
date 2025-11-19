@@ -12,11 +12,11 @@
 The exploitation path involves an **SSRF via WebSocket interaction**, followed by a **rare HTTP/2 → HTTP/1.1 downgrade desynchronization attack (H2.CL request smuggling)**.
 
 **Key themes:**
-- 📡 Reconnaissance & directory enumeration  
-- 🧠 SSRF + WebSocket chaining  
-- 🧱 Proxy bypass & internal endpoint discovery  
-- 🔀 HTTP/2 → HTTP/1.1 downgrade exploit (request smuggling)  
-- 🎯 Flag extraction through advanced desync techniques  
+- Reconnaissance & directory enumeration  
+- SSRF + WebSocket chaining  
+- Proxy bypass & internal endpoint discovery  
+- HTTP/2 → HTTP/1.1 downgrade exploit (request smuggling)  
+- Flag extraction through advanced desync techniques  
 
 ---
 
