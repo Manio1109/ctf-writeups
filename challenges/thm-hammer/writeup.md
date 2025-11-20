@@ -260,20 +260,38 @@ THM{REDACTED}
 
 ---
 
-## 💭 Reflectie
+## 💭 Reflection
 
-This room provided a solid mix of techniques, including directory fuzzing, JWT manipulation,  
-and command injection. Working with JWT secrets and forging tokens to obtain admin privileges  
-was especially insightful.
+This room highlighted how multiple minor weaknesses can progressively build into a full system compromise.  
+Rather than exploiting a single major flaw, the challenge emphasized how small misconfigurations and insecure design choices can cascade when chained correctly:
 
-The step-by-step progression — from enumeration to full remote code execution — showed how  
-small weaknesses can chain together into a complete system compromise. Tools like **ffuf**,  
-**Burp Suite**, and custom **Python scripting** proved essential throughout the process.
+- Directory enumeration exposing hidden internal functionality.
+- Log files leaking sensitive information used during authentication flows.
+- A weak 4‑digit PIN reset mechanism vulnerable to brute‑forcing.
+- Hardcoded JWT secrets allowing full privilege escalation through token forging.
+- An admin‑level command injection point granting remote code execution.
 
-Overall, a challenging and valuable room that helped sharpen my penetration testing skills.
+Together, these steps illustrated how easily an attacker can move from initial discovery to complete compromise when multiple low‑severity issues coexist.
 
-### 🎯 Key Takeaways
-- Weak directory naming conventions can leak internal structure  
-- Logs often expose sensitive data  
-- Hardcoded JWT secrets = instant privilege escalation  
-- Chaining small findings leads to full system compromise  
+---
+
+### Key Takeaways
+
+- **Discovery is essential** — obscure or poorly named directories often leak more information than intended.
+- **Application logs must be sanitized and protected**, as they frequently expose operational details or credentials.
+- **Weak reset mechanisms are dangerous**; PIN‑based authentication requires strict rate‑limiting and lockout controls.
+- **JWTs are only as secure as their secrets** — once exposed, privilege boundaries collapse immediately.
+- **Small findings combine into powerful chains**, often far more impactful than individual vulnerabilities alone.
+
+---
+
+### Lessons Learned
+
+- Authentication and recovery flows must enforce rate‑limits and avoid predictable PIN or token structures.
+- Sensitive logs should never be publicly accessible and must be treated as high‑value assets.
+- Secrets used for signing or encryption must be stored securely and never exposed through the application itself.
+- Administrative functionality should be isolated, validated, and protected against tampering at the token level.
+- Defense in depth is critical — even minor oversights can become severe when attackers can chain them together.
+
+This room serves as a clear reminder that real compromises often arise from *vulnerability chaining*, not standalone exploits.
+ 
