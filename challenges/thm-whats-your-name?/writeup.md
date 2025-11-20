@@ -57,8 +57,6 @@ http://worldwap.thm/public/html/
 
 ## 2. 💣 Initial XSS Payload — Cookie Exfiltration
 
-### Why the XSS Worked
-
 The “full name” field is rendered directly into the DOM without any output encoding.  
 Additionally, the application does not apply the following protections:
 
@@ -128,26 +126,21 @@ Further investigation of the platform and its interactive features revealed an o
 
 ---
 
-## 5. 🤖 CSRF-Style Exploitation via Chatbot Functionality
+### 5. 🤖 DOM XSS in Chatbot → CSRF-Style Privilege Escalation
 
-The application included a chatbot feature that processed user-supplied content.  
-Although designed as a message interface, the chatbot failed to sanitize input and executed HTML/JavaScript within the user context.
+The platform included a chatbot that rendered user messages using `innerHTML`.  
+This meant arbitrary HTML and JavaScript executed automatically — a classic **DOM XSS vector**.
 
-This made it possible to abuse the chatbot to perform **authenticated actions** on behalf of the currently logged-in user.
+During moderator access analysis, an internal backend was discovered running on **port 8081**.  
+One endpoint was particularly interesting:
+`/change_password.php` (POST only, no role verification)
 
-Using the same `img onerror` approach as before, a crafted payload was sent through the chatbot to force the browser to submit a privileged POST request to an internal endpoint on port `8081`:
+Because the backend trusted any request containing a valid session cookie, it became vulnerable to **XSS-assisted CSRF**.
 
-### How the vulnerable endpoint was discovered
-By browsing the internal links available in the moderator dashboard, an iframe and several AJAX calls referenced port **8081**, which exposes an administrative backend. One of the files, **/change_password.php**, accepts POST requests without verifying the user's role.
-
-### Why the chatbot executes JavaScript
-Messages in the chatbot are rendered using `innerHTML`, meaning user input is inserted directly into the DOM. This converts any HTML or script-based payloads into live, executable browser content.
-
-### Why the forced request succeeds
-The backend only checks whether the request contains a valid PHP session cookie, not whether the user is an administrator. This makes the endpoint vulnerable to CSRF-style request forgery.
+Using the chatbot as an injection surface:
 
 ```html
-<img src="x" onerror="
+<img src=x onerror="
   fetch('http://worldwap.thm:8081/change_password.php', {
     method: 'POST',
     credentials: 'include',
@@ -157,20 +150,18 @@ The backend only checks whether the request contains a valid PHP session cookie,
 ">
 ```
 
-**Why this works:**
--The browser is **already authenticated,** and `credentials: 'include'` forwards the moderator’s cookies automatically.
--The internal endpoint `(change_password.php)` trusts any authenticated POST request.
--No CSRF tokens or server-side validation were implemented.
--The chatbot served as an unintentional **JavaScript execution vector.**
+**Why this worked:**
+- The browser forwarded cookies `(credentials: include)`
+- Backend lacked role checks
+- No CSRF tokens
+- No Origin/Referrer validation
+- Chatbot executed JavaScript directly in the moderator's session context
 
-**The result:**
-The administrator password was successfully changed **without direct access** to the admin interface.
-
-This created the perfect privilege-escalation route toward full administrative control of the platform.
+This allowed the moderator session to silently update the **admin password.**
 
 ---
 
-## 6. 🔑 Gaining Administrative Access — Flag #2
+### 6. 🔑 Gaining Administrative Access — Flag #2
 
 With the administrator password forcefully reset via the CSRF-style payload, logging into the admin panel became straightforward.
 
