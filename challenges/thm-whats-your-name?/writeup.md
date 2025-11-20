@@ -180,4 +180,14 @@ REDACTED
 | **Moderator** | XSS → session cookie exfiltration   | `REDACTED`   |
 | **Admin**     | Forced POST (CSRF-like) via chatbot | `REDACTED` |
 
+---
+
+## Room links
+
+📸 [screenshots](../../challenges/thm-el-bandito/screenshots.md)
+
+🔗 [TryHackMe - El bandito](https://tryhackme.com/room/elbandito)
+
+---
+
 
