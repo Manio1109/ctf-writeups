@@ -285,7 +285,7 @@ Each step reinforced the idea that even minor oversights, when combined, create 
 
 ---
 
-### 🔑 Key Takeaways
+### Key Takeaways
 
 - **Prototype Pollution is more impactful than expected** — especially when it manipulates authorization logic.
 - **SSRF is extremely dangerous** when applications trust localhost services or expose hidden internal endpoints.
@@ -295,7 +295,7 @@ Each step reinforced the idea that even minor oversights, when combined, create 
 
 ---
 
-### 📚 Lessons Learned
+### Lessons Learned
 
 - Authorization should never rely directly on user‑controlled JSON input structures.
 - Localhost‑bound routes must be protected even from internal application components.
