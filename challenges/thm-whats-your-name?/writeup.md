@@ -38,7 +38,7 @@ The room demonstrates how *low-severity client-side bugs* can quickly escalate i
 
 ## 🚀 Attack Path
 
-## 1. 🔎 Portscan & Service Reconnaissance
+### 1. 🔎 Portscan & Service Reconnaissance
 
 ```bash
 nmap -T4 -p- -sC -sV worldwap.thm -Pn -n
@@ -55,7 +55,7 @@ http://worldwap.thm/public/html/
 
 ---
 
-## 2. 💣 Initial XSS Payload — Cookie Exfiltration
+### 2. 💣 Initial XSS Payload — Cookie Exfiltration
 
 The “full name” field is rendered directly into the DOM without any output encoding.  
 Additionally, the application does not apply the following protections:
@@ -77,7 +77,7 @@ This session cookie belonged to a moderator account.
 
 ---
 
-## 3. 🔁 Session Hijacking — Moderator Access
+### 3. 🔁 Session Hijacking — Moderator Access
 
 With the stolen `PHPSESSID` obtained via the XSS payload, the next step was to impersonate the moderator account.
 
@@ -106,7 +106,7 @@ This confirms that the platform lacked proper session protections such as:
 
 ---
 
-## 4. 🧩 Investigating the Platform for Admin Privileges
+### 4. 🧩 Investigating the Platform for Admin Privileges
 
 After gaining moderator access, the next objective was to escalate privileges to the **administrator** account.
 
