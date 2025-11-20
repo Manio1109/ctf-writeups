@@ -54,7 +54,7 @@ This write-up is part of my offensive security portfolio and follows a clear, st
 ```bash
 nmap -sV -p- -T4 10.10.239.203
 ```
-🟦 Open Ports
+Open Ports
 | Port      | Service               |
 | --------- | --------------------- |
 | 22/tcp    | SSH                   |
