@@ -190,4 +190,41 @@ REDACTED
 
 ---
 
+## 💭 Reflection
+
+This room demonstrated how seemingly simple web vulnerabilities can escalate into a full compromise when chained together with weak session controls and missing server-side validation.  
+What initially appeared to be a basic stored XSS issue evolved into a multi-stage attack path that mirrors real-world failures in access control and session handling.
+
+The challenge highlighted several critical mechanics:
+
+- **Stored XSS enabling credential/session exfiltration.**
+- **Weak session management**, allowing hijacking with nothing more than a stolen cookie.
+- **A chatbot that executed arbitrary HTML/JS**, providing an alternative injection vector.
+- **CSRF-style privilege escalation** against backend endpoints that performed no authorization checks.
+
+The power of this room comes from how these flaws interacted.  
+Individually, each vulnerability was moderate. Combined, they enabled full administrative control.
+
+---
+
+### Key Takeaways
+
+- **Persistent XSS remains one of the most dangerous web vulnerabilities**, especially when session cookies lack security flags such as `HttpOnly`.
+- **Role-based access controls must be enforced on the server**, not only in the UI.  
+  If backend endpoints trust any authenticated request, privilege boundaries collapse instantly.
+- **User-facing features like chatbots must sanitize input thoroughly**, since they often run with the same privileges as the user viewing them.
+- **CSRF protections (tokens, Origin checks, SameSite settings)** are essential to prevent browsers from being weaponized against themselves.
+
+---
+
+### Lessons Learned
+
+- **Session cookies must be protected with `HttpOnly`, `Secure`, and ideally `SameSite` attributes**.  
+  Without them, any XSS becomes a direct session takeover.
+- **Every privileged action should include proper authorization checks**, regardless of which endpoint receives the request.
+- **Never trust browser-initiated actions** — they can be forged, automated, or executed through hidden vectors such as injected images or scripts.
+- **Defense-in-depth is the only reliable approach**: even if XSS is overlooked, strong session management and server-side access controls can still mitigate major impact.
+
+This room reinforces how attackers often exploit not a single vulnerability, but the **intersections** between them.  
+Modern web security relies on consistent validation across layers — and when even one link is weak, the entire chain becomes an attack surface.
 
