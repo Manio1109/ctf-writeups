@@ -5,6 +5,17 @@
 
 🔗 [View the room on TryHackMe](https://tryhackme.com/room/include)
 
+> **Disclaimer:**  
+> This write-up is for educational and professional demonstration purposes only.  
+> All testing was performed in a controlled, authorized environment (TryHackMe).  
+> No techniques described here were used against real-world systems.
+
+#### About This Write-Up
+This document is part of my offensive security portfolio.  
+My goal is to present structured, professional case studies that demonstrate practical penetration testing skills, clear reporting, and a real-world methodology.
+
+These write-ups are meant to demonstrate practical offensive security skills relevant to junior pentesting, red teaming, and application security roles.
+
 ---
 
 ## 🧠 Summary  
