@@ -184,9 +184,9 @@ REDACTED
 
 ## Room links
 
-📸 [screenshots](../../challenges/thm-el-bandito/screenshots.md)
+📸 [screenshots](../../challenges/thm-whats-your-name?/screenshots.md)
 
-🔗 [TryHackMe - El bandito](https://tryhackme.com/room/elbandito)
+🔗 [TryHackMe - El bandito](https://tryhackme.com/room/whatsyourname)
 
 ---
 
