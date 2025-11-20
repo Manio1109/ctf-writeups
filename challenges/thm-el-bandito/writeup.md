@@ -317,18 +317,32 @@ In this architecture, the frontend accepted HTTP/2 but the backend (like Varnish
 
 ## 💭 Reflection
 
-This room combines multiple layers of web exploits into a single attack path:
+This room showcased how multiple protocol‑level quirks can be chained into a highly sophisticated exploitation path.  
+Rather than relying on conventional web vulnerabilities, the challenge focused on subtle behaviors within proxies, upgrade mechanisms, and HTTP/2 → HTTP/1.1 conversions:
 
-- **SSRF exploitation** through WebSocket upgrade headers.  
-- **Proxy deception** by returning a `101 Switching Protocols` response.  
-- **HTTP/2 → HTTP/1.1 downgrade** (H2.CL desynchronization) — rare but powerful, especially when combined with Varnish-based caching layers.
+- **SSRF triggered through misleading WebSocket upgrade headers.**
+- **Proxy misdirection** by serving a crafted `101 Switching Protocols` response.
+- **H2.CL desynchronization**, exploiting inconsistent handling of `Content-Length` during protocol downgrades.
+
+The combination of SSRF, upgrade deception, and request smuggling created a layered attack surface rarely seen outside advanced real‑world pentests and research environments.
+
+---
 
 ### Key Takeaways
-- Proxies are often the weakest link between layers — misconfigurations or incorrect protocol conversions can open the door to complex attack chains.  
-- HTTP standards and implementations are not always applied correctly; this enables advanced techniques such as request smuggling.  
-- Patience, systematic testing, and experimentation are essential for this type of lab — try small variations and log everything carefully.
+
+- **Proxy layers often introduce more risk than expected** — especially when they translate or downgrade traffic between HTTP versions.
+- **Misaligned protocol implementations enable powerful exploitation**, such as request smuggling and cache poisoning.
+- **Exploit development in this domain requires iteration and precision**: small header variations, timing differences, or subtle content‑length mismatches can determine success or failure.
+- **SSRF becomes dramatically more impactful** when the underlying infrastructure trusts upgrade flows or performs complex protocol conversions.
+
+---
 
 ### Lessons Learned
-- Protocol downgrade paths should be audited explicitly.
-- WebSocket upgrade flows require strict validation.
-- SSRF is more dangerous when combined with protocol-level behavior.
+
+- **Protocol downgrade paths must be explicitly validated**: any automated H2 → H1 conversion introduces opportunities for inconsistencies.
+- **WebSocket upgrade logic should be tightly controlled**, rejecting unexpected 101 responses and ensuring upgrades occur only on authorized routes.
+- **SSRF protections must account for protocol semantics**, not just URL allowlisting.
+- **Defense‑in‑depth is essential**: even robust components like Varnish can be undermined by a weak link in the chain.
+
+This room reinforces how modern web stacks rely on intricate protocol handling — and how attackers can exploit those layers when validation and isolation are imperfect.
+
