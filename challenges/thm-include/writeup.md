@@ -251,6 +251,14 @@ THM{REDACTED}
 
 ---
 
+## Room links
+
+📸 [screenshots](../../challenges/thm-include/screenshots.md)
+
+🔗 [TryHackMe - include](https://tryhackme.com/room/include)
+
+---
+
 ### 💭 Reflection
 
 This room showcased how multiple seemingly small vulnerabilities can be chained into a full system compromise.  
