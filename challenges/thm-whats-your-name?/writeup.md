@@ -57,7 +57,8 @@ http://worldwap.thm/public/html/
 
 ## 2. 💣 Initial XSS Payload — Cookie Exfiltration
 
-During the registration process a stored XSS vector was discovered.  
+During the registration process a stored XSS vector was discovered. The payload is stored inside the user profile field ("full name") which is later rendered on the moderator's dashboard. Because this field is displayed without any output encoding, the payload executes whenever a privileged user views the affected profile.
+
 Injecting an `img onerror` payload allowed JavaScript execution inside the victim’s browser:
 
 ```html
@@ -85,6 +86,7 @@ To do this, the session cookie was replaced inside the browser:
 ```bash
 login.worldwap.thm/login.php
 ```
+The session remained valid because the application does not rotate the session ID after login. This allowed re-use of a moderator's active PHPSESSID without triggering any invalidation or IP/user-agent checks.
 
 After refreshing, the application authenticated the session as a **moderator**, granting elevated dashboard access.
 
@@ -128,6 +130,15 @@ Although designed as a message interface, the chatbot failed to sanitize input a
 This made it possible to abuse the chatbot to perform **authenticated actions** on behalf of the currently logged-in user.
 
 Using the same `img onerror` approach as before, a crafted payload was sent through the chatbot to force the browser to submit a privileged POST request to an internal endpoint on port `8081`:
+
+### How the vulnerable endpoint was discovered
+By browsing the internal links available in the moderator dashboard, an iframe and several AJAX calls referenced port **8081**, which exposes an administrative backend. One of the files, **/change_password.php**, accepts POST requests without verifying the user's role.
+
+### Why the chatbot executes JavaScript
+Messages in the chatbot are rendered using `innerHTML`, meaning user input is inserted directly into the DOM. This converts any HTML or script-based payloads into live, executable browser content.
+
+### Why the forced request succeeds
+The backend only checks whether the request contains a valid PHP session cookie, not whether the user is an administrator. This makes the endpoint vulnerable to CSRF-style request forgery.
 
 ```html
 <img src="x" onerror="
