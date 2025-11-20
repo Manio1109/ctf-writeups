@@ -93,6 +93,9 @@ Resulted in my profile being elevated to **admin privileges.**
 
 With administrative access unlocked, the application revealed the **Admin Dashboard API documentation**, exposing internal-only API routes that became essential for the next stage of the attack.
 
+#### Why the Prototype Pollution Worked
+The application merged user‑supplied JSON into server‑side objects using a deep merge function without filtering out `__proto__` or inherited properties. As a result, adding `"isAdmin": true` modified the prototype of the user object, causing every new instance of that object to inherit the overridden `isAdmin` value.
+
 ---
 
 ### 4. 🔑 Internal Admin Dashboard API
@@ -129,9 +132,9 @@ The decoded output revealed the following credentials:
 ```json
 {
   "ReviewAppUsername": "admin",
-  "ReviewAppPassword": "admin@!!!",
+  "ReviewAppPassword": "[redacted]",
   "SysMonAppUsername": "administrator",
-  "SysMonAppPassword": "$9$qk6d#**LQU"
+  "SysMonAppPassword": "[redacted]"
 }
 ```
 
@@ -189,26 +192,28 @@ From this output, I was able to identify valid system users:
 
 These usernames became valuable in later stages for SSH access and brute forcing.
 
+#### Why the Traversal Bypass Worked
+The application sanitized `../` but did not filter `....//`.  
+After filesystem normalization, `....//` resolves to `../`, allowing directory traversal despite the filter:
+```bash
+....// → ../
+```
+This made it possible to reach `/etc/passwd` and other system files.
+
 ---
 
-### 8. 🛤️ Path Traversal Explained
+### 8. 🛤️ Path Traversal Mechanics
 
-The LFI vulnerability in `profile.php` was exploitable through **directory traversal sequences**, allowing access to files outside the intended web directory.
+The vulnerable `profile.php` script concatenated the `img` parameter directly into a file path without validation.  
+By using repeated traversal sequences such as:
 
-By chaining multiple traversal patterns such as:
 ```bash
 ....//....//....//etc/passwd
 ```
 
-the script resolved the path and returned files from the underlying filesystem.
+it became possible to break out of the web directory and read arbitrary system files.
 
-This technique made it possible to:
-
-- Read sensitive system files  
-- Enumerate valid local users  
-- Access files not normally reachable from the web application  
-
-Path traversal served as a key step in gathering user information, which later enabled successful SSH access.
+The application attempted to block `../`, but the alternative sequence `....//` bypassed the filter and normalized back into `../` at runtime.
 
 ---
 
@@ -228,6 +233,14 @@ login: charles password: REDACTED
 ```
 
 Both accounts reused extremely weak passwords, allowing successful SSH logins and granting full shell access to the machine.
+
+#### Note on Brute Forcing
+Brute forcing was performed only because:
+- the room explicitly expects it,
+- account lockout was disabled,
+- it is part of a safe, controlled CTF environment.
+
+In a real engagement, brute forcing would only be attempted with authorization and usually under strict rate‑limited conditions.
 
 ---
 
