@@ -251,4 +251,38 @@ THM{REDACTED}
 
 ---
 
+### 💭 Reflection
+
+This room showcased how multiple seemingly small vulnerabilities can be chained into a full system compromise.  
+Instead of relying on a single critical flaw, the challenge demonstrated the power of layered exploitation:
+
+- Prototype Pollution escalating a standard user into an admin.
+- Internal-only Admin APIs becoming reachable through SSRF abuse.
+- LFI enabling enumeration of system users and filesystem structure.
+- Weak password hygiene allowing successful SSH brute‑forcing.
+- Misconfigurations in backups and permissions exposing sensitive data.
+
+Each step reinforced the idea that even minor oversights, when combined, create a clear attack path.
+
+---
+
+### 🔑 Key Takeaways
+
+- **Prototype Pollution is more impactful than expected** — especially when it manipulates authorization logic.
+- **SSRF is extremely dangerous** when applications trust localhost services or expose hidden internal endpoints.
+- **LFI is still one of the most effective enumeration techniques**, particularly on misconfigured PHP setups.
+- **Password reuse remains one of the most common real‑world mistakes**, even in multi‑user environments.
+- **Backup files should be secured**; accessible archives often leak credentials or keys.
+
+---
+
+### 📚 Lessons Learned
+
+- Authorization should never rely directly on user‑controlled JSON input structures.
+- Localhost‑bound routes must be protected even from internal application components.
+- Directory traversal protections should be strict and validated server‑side.
+- SSH access should enforce strong password policies and avoid reuse across users.
+- Defense in depth matters — one misconfiguration is rarely catastrophic, but several combined always are.
+
+This room is a strong reminder that real‑world compromises often come from *chains* of misconfigurations, not single exploits.
 
