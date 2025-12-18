@@ -275,10 +275,12 @@ This step concluded the exploitation process, demonstrating how chained web vuln
 
 ---
 
-| Flag       | Location           | Technique     |
-| ---------- | ------------------ | ------------- |
-| Admin Flag | Admin panel        | SQL Injection |
-| Root Flag  | `flags/` directory | SSTI → RCE    |
+## 🏁 Flags Obtained
+
+| 🏷️ Flag Type | Technique Used                | Result |
+|--------------|-------------------------------|--------|
+| Admin Flag   | SQL Injection → Admin login   | `THM{INJECTICS_ADMIN_PANEL_007}` |
+| Root Flag    | SSTI → RCE → File read        | `THM{5735172b6c147f4dd649872f73e0fdea}` |
 
 ---
 
