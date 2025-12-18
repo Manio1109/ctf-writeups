@@ -126,6 +126,7 @@ Using the previously identified injection point, a payload was submitted to inte
 ```
 
 Instead of permanently breaking the application, the server responded with a message indicating that a recovery mechanism was in place:
+
 *"Seems like database or some important table is deleted. InjecticsService is running to restore it. Please wait for 1–2 minutes."*
 
 This response revealed that the application automatically restores critical database tables when they are missing.
@@ -144,3 +145,130 @@ This behavior significantly lowered the attack complexity, as it allowed an atta
 
 ---
 
+### 5. 🔑 Administrative Access & Flag 1
+
+After allowing the database restoration process to complete, the application returned to its default state.  
+At this point, the previously exposed credentials from `mail.log` became valid again.
+
+Using the restored **superadmin** credentials, a successful login was performed via the application’s login page.
+
+Once authenticated, access to the administrative interface was granted. This confirmed that:
+- Authentication controls had been fully bypassed.
+- Administrative privileges were obtained without legitimate authorization.
+
+Within the admin panel, the first flag was located.
+
+**Flag 1:**
+```text
+THM{INJECTICS_ADMIN_PANEL_007}
+```
+
+**Security impact:**
+- Full administrative access was achieved.
+- Sensitive application functionality became accessible.
+- This access enabled further exploitation paths, including template manipulation and code execution.
+
+At this stage, the attacker had complete control over the web application layer, setting the stage for escalation to system-level access.
+
+---
+
+### 6. 🧩 Identifying Server-Side Template Injection (SSTI)
+
+With administrative access obtained, further analysis of the application’s functionality was performed to identify additional attack vectors.
+
+Within the admin dashboard, a user-controlled input field was discovered in the **profile configuration section**. Changes made to this field were reflected dynamically in server-rendered pages, making it a strong candidate for server-side template injection testing.
+
+To confirm whether template expressions were being evaluated by the backend, the following benign test payload was submitted:
+
+```twig
+{{7*7}}
+```
+
+The application returned the evaluated result:
+```text
+49
+```
+
+**This response confirmed that:**
+- User input was being processed directly by the template engine.
+- No sanitization or sandboxing was in place.
+- The application was vulnerable to **Server-Side Template Injection (SSTI).**
+
+Further inspection of error messages and rendering behavior indicated that the application was using the **Twig** templating engine.
+
+**Security impact:**
+- Server-side template evaluation allowed arbitrary expression execution.
+- Twig SSTI can often be escalated to remote code execution.
+- This vulnerability enabled escalation beyond the application layer.
+
+The presence of SSTI marked a critical escalation point, as it opened the door to executing arbitrary system commands on the server.
+
+---
+
+### 7. 🖥️ Remote Code Execution via SSTI (Twig)
+
+After confirming the presence of Server-Side Template Injection, the next objective was to escalate this vulnerability to **Remote Code Execution (RCE)**.
+
+An initial attempt was made to directly execute system commands using a common Twig payload:
+
+```twig
+{{ _self.constructor.constructor("passthru('ls')")() }}
+```
+
+This payload resulted in an error, indicating that direct constructor access was restricted or partially sandboxed.
+
+Further testing led to the discovery of an alternative technique that leverages Twig’s `sort` filter to invoke PHP functions indirectly. The following payload successfully executed a system command:
+```twig
+{{['id',""]|sort('passthru')}}
+```
+
+The server responded with the output of the executed command:
+```text
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+**This confirmed that:**
+- Arbitrary system commands were executed on the server.
+- Code execution occurred in the context of the www-data user.
+- The SSTI vulnerability had been successfully escalated to full RCE.
+
+**Security impact:**
+- Complete compromise of the web server execution context.
+- Ability to execute arbitrary shell commands.
+- Potential access to sensitive files, credentials, and system resources.
+
+At this stage, the attacker effectively gained command execution capabilities on the underlying operating system.
+
+---
+
+### 8. 🏴 Locating and Extracting the Final Flag
+
+With remote code execution achieved, the final step was to locate sensitive files on the system.
+
+Using the previously established command execution via SSTI, directory enumeration was performed to identify potential locations of the flag files. The following command was executed to list the contents of the `flags` directory:
+
+```twig
+{{['ls -la flags',""]|sort('passthru')}}
+```
+
+The output revealed a file with a randomized name:
+```text
+5d8af1dc14503c7e4bdc8e51a3469f48.txt
+```
+
+The contents of this file were then read using another SSTI payload:
+```twig
+{{['cat flags/5d8af1dc14503c7e4bdc8e51a3469f48.txt',""]|sort('passthru')}}
+```
+
+This returned the final flag:
+```text
+THM{5735172b6c147f4dd649872f73e0fdea}
+```
+
+Impact:
+- Successful read access to sensitive server-side files.
+- Confirmation of full exploitation from initial injection to system-level access.
+- Completion of the attack chain for the Injectics room.
+
+This step concluded the exploitation process, demonstrating how chained web vulnerabilities can escalate from simple injection flaws to full remote code execution.
