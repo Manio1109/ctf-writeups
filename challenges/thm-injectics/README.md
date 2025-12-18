@@ -57,15 +57,6 @@ Below is a condensed overview of the exploitation chain:
 
 ---
 
-## 🏁 Flags Obtained
-
-| 🏷️ Flag Type | Technique Used                | Result |
-|--------------|-------------------------------|--------|
-| Admin Flag   | SQL Injection → Admin login   | `THM{INJECTICS_ADMIN_PANEL_007}` |
-| Root Flag    | SSTI → RCE → File read        | `THM{5735172b6c147f4dd649872f73e0fdea}` |
-
----
-
 ## ⚠️ Disclaimer
 
 This repository is intended **strictly for educational purposes**.  
@@ -79,22 +70,7 @@ All testing was performed in a controlled, authorized environment provided by Tr
 
 - [**TryHackMe Room – Injectics**](https://tryhackme.com/room/injectics)
 - [**Write-up**](../../challenges/thm-injectics/writeup.md)
-- [**Screenshots**](../../assets/screenshots_injectics.md)
+- [**Screenshots**](../../challenges/thm-injectics/screenshots.md)
 
 ---
-
-## 💭 Reflection
-
-Injectics demonstrates how seemingly simple vulnerabilities can escalate rapidly when combined:
-
-- Weak **client-side filtering** offers no real protection against SQL Injection.
-- Exposed logs (`mail.log`) can completely undermine authentication.
-- **SSTI vulnerabilities** are especially dangerous, often leading directly to RCE when template engines like Twig are misused.
-
-This room reinforced the importance of:
-- Never trusting client-side validation
-- Treating logs and debug artifacts as sensitive assets
-- Understanding how template engines work internally
-
-Overall, Injectics is a strong example of real-world web exploitation fundamentals, bridging classic injection attacks with modern server-side execution flaws.
 
