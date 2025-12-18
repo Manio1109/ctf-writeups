@@ -22,7 +22,7 @@ These write-ups are meant to demonstrate practical offensive security skills rel
 **Include** is a medium-difficulty web exploitation room focused on chaining multiple vulnerabilities in a Node.js + PHP environment.  
 This challenge requires combining **Prototype Pollution**, **SSRF**, **LFI/Path Traversal**, and finally **SSH brute force** to gain full system access.
 
-**Core techniques demonstrated:**
+**Key themes:**
 - 🧩 **Prototype Pollution → privilege escalation**  
 - 🌐 **SSRF to reach internal-only APIs**  
 - 📂 **Local File Inclusion & Path Traversal**  
