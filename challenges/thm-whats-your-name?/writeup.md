@@ -12,8 +12,8 @@
 
 ## 🧠 Summary
 **What’s Your Name?** is a web exploitation lab focused on identifying and chaining client-side weaknesses to escalate privileges.  
-The exploitation path revolves around:
 
+**Key themes:**
 - Recon & port enumeration  
 - Stored XSS → cookie exfiltration  
 - Forced privilege actions via CSRF-like exploitation  
