@@ -12,13 +12,18 @@
 > All testing was performed in a controlled, authorized environment (TryHackMe).  
 > No techniques described here were used against real-world systems.
 
+#### About This Write-Up
+This document is part of my offensive security portfolio.  
+My goal is to present structured, professional case studies that demonstrate practical penetration testing skills, clear reporting, and a real-world methodology.
+
+These write-ups are meant to demonstrate practical offensive security skills relevant to junior pentesting, red teaming, and application security roles.
+
 ---
 
-## 🧠 Overview
-
+## 🧠 Summery
 **Injectics** is a medium-difficulty web exploitation room focused on identifying and chaining classic web vulnerabilities into full system compromise.
 
-The challenge walks through:
+**Key themes:**
 - **SQL Injection** for authentication bypass  
 - **Abusing application recovery logic**  
 - **Server-Side Template Injection (SSTI)**  
@@ -160,7 +165,7 @@ Within the admin panel, the first flag was located.
 
 **Flag 1:**
 ```text
-THM{INJECTICS_ADMIN_PANEL_007}
+THM{REDACTED}
 ```
 
 **Security impact:**
@@ -263,7 +268,7 @@ The contents of this file were then read using another SSTI payload:
 
 This returned the final flag:
 ```text
-THM{5735172b6c147f4dd649872f73e0fdea}
+THM{REDACTED}
 ```
 
 Impact:
@@ -279,8 +284,8 @@ This step concluded the exploitation process, demonstrating how chained web vuln
 
 | 🏷️ Flag Type | Technique Used                | Result |
 |--------------|-------------------------------|--------|
-| Admin Flag   | SQL Injection → Admin login   | `THM{INJECTICS_ADMIN_PANEL_007}` |
-| Root Flag    | SSTI → RCE → File read        | `THM{5735172b6c147f4dd649872f73e0fdea}` |
+| Admin Flag   | SQL Injection → Admin login   | `THM{REDACTED}` |
+| Root Flag    | SSTI → RCE → File read        | `THM{REDACTED}` |
 
 ---
 
