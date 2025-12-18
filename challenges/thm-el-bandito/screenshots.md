@@ -95,17 +95,7 @@
 
 ---
 
-## 10) Test listener — confirming outbound requests
-![Test listener and incoming request](/images/elbandito_request_aanpassen_en_python3_server.png)
-
-**Summary:** Launched `python3 -m http.server` on the attack box to log inbound requests.  
-**Role / Tools:** Python HTTP server, Burp.  
-**Result:** Received an inbound request from the target — confirming SSRF capability.  
-**Sensitivity:** Low.
-
----
-
-## 11) Trace / diagnostics probing via Burp
+## 10) Trace / diagnostics probing via Burp
 ![Trace endpoint probes](/images/elbandito_trace_directory_checken_burp.png)
 
 **Summary:** Probing trace/diagnostic endpoints to identify internal information.  
@@ -115,7 +105,7 @@
 
 ---
 
-## 12) `GET /admin-creds` — admin credentials discovered (SSRF)
+## 11) `GET /admin-creds` — admin credentials discovered (SSRF)
 ![Admin creds via SSRF](/images/elbandito_admin-creds_checken_burp.png)
 
 **Summary:** Admin credentials leaked via the SSRF path:  
@@ -128,7 +118,7 @@
 
 ---
 
-## 13) `GET /admin-flag` — Flag 1
+## 12) `GET /admin-flag` — Flag 1
 ![Admin flag via SSRF](/images/elbandito_admin-flag_checken_burp.png)
 
 **Summary:** First flag retrieved via an internal endpoint:  
@@ -140,7 +130,7 @@
 
 ---
 
-## 14) Logging in with recovered credentials
+## 13) Logging in with recovered credentials
 ![Login with credentials](/images/elbandito_inloggen_met_credentials.png)
 
 **Summary:** Successful login at `/access` using the recovered admin credentials.  
@@ -150,7 +140,7 @@
 
 ---
 
-## 15) Messages page — chat interface (authenticated)
+## 14) Messages page — chat interface (authenticated)
 ![Messages page logged in](/images/elbandito_messages_pagina.png)
 
 **Summary:** Authenticated chat interface (Jack & Oliver) — the central communication component.  
@@ -160,7 +150,7 @@
 
 ---
 
-## 16) Varnish cache indicators
+## 15) Varnish cache indicators
 ![Varnish cache detection](/images/elbandit0_varnish_cache_server.png)
 
 **Summary:** Response headers indicate the presence of a Varnish cache layer.  
@@ -170,7 +160,7 @@
 
 ---
 
-## 17) POST manipulation & H2.CL experiments
+## 16) POST manipulation & H2.CL experiments
 ![POST request experiments](/images/elbandito_post_request_onderschept_en_aangepast.png)
 
 **Summary:** Experiments with malformed `Content-Length` values in HTTP/2 requests to force H2 → H1 desynchronization.  
@@ -180,7 +170,7 @@
 
 ---
 
-## 18) Flag 2 — H2.CL request smuggling (result)
+## 17) Flag 2 — H2.CL request smuggling (result)
 ![Flag 2 — H2.CL exploit](/images/elbandito_get_request_met_flag_ontvangen.png)
 
 **Summary:** Second flag obtained after a successful HTTP/2 → HTTP/1.1 desync exploit.  
