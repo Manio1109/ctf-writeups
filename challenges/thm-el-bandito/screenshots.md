@@ -121,9 +121,7 @@
 ## 12) `GET /admin-flag` — Flag 1
 ![Admin flag via SSRF](/images/elbandito_admin-flag_checken_burp.png)
 
-**Summary:** First flag retrieved via an internal endpoint:  
-`THM{:::MY_DECLINATION:+62°_14'_31.4'':::}`
-
+**Summary:** First flag retrieved via an internal endpoint.
 **Role / Tools:** SSRF chaining.  
 **Result:** CTF evidence that SSRF and proxy chaining were successful.  
 **Sensitivity:** Medium.
@@ -180,11 +178,4 @@
 
 ---
 
-## Retrieved flags (CTF)
-
-- **Flag 1 (admin / SSRF):**  
-  `THM{:::MY_DECLINATION:+62°_14'_31.4'':::}`
-
-- **Flag 2 (H2.CL smuggling):**  
-  `THM{¡!¡RIGHT_ASCENSION_12h_36m_25.46s!¡!}`
 
