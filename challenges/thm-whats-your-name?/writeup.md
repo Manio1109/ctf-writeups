@@ -194,7 +194,7 @@ REDACTED
 
 📸 [screenshots](../../challenges/thm-whats-your-name?/screenshots.md)
 
-🔗 [TryHackMe - El bandito](https://tryhackme.com/room/whatsyourname)
+🔗 [TryHackMe - What's Your Name](https://tryhackme.com/room/whatsyourname)
 
 ---
 
