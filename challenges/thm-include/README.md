@@ -71,9 +71,8 @@ The `scripts/` folder (if included) contains:
 
 ## ⚠️ Disclaimer
 
-This repository is intended **strictly for educational and professional development purposes**.  
-All testing was performed within a legal, isolated environment (TryHackMe).  
-These techniques must **never** be used on systems without explicit authorization.
+This repository is intended **strictly for educational purposes** and should only be used within legal, authorized environments such as TryHackMe.  
+Never perform these techniques on systems without explicit permission.
 
 ---
 
