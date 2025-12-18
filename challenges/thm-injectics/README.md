@@ -59,10 +59,8 @@ Below is a condensed overview of the exploitation chain:
 
 ## ⚠️ Disclaimer
 
-This repository is intended **strictly for educational purposes**.  
-All testing was performed in a controlled, authorized environment provided by TryHackMe.  
-
-❗ Never attempt these techniques on systems you do not own or have explicit permission to test.
+This repository is intended **strictly for educational purposes** and should only be used within legal, authorized environments such as TryHackMe.  
+Never perform these techniques on systems without explicit permission.
 
 ---
 
