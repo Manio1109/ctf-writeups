@@ -272,3 +272,56 @@ Impact:
 - Completion of the attack chain for the Injectics room.
 
 This step concluded the exploitation process, demonstrating how chained web vulnerabilities can escalate from simple injection flaws to full remote code execution.
+
+---
+
+| Flag       | Location           | Technique     |
+| ---------- | ------------------ | ------------- |
+| Admin Flag | Admin panel        | SQL Injection |
+| Root Flag  | `flags/` directory | SSTI → RCE    |
+
+---
+
+## Room links
+
+📸 [screenshots](../../challenges/thm-injectics/screenshots.md)
+
+🔗 [TryHackMe - El bandito](https://tryhackme.com/room/injectics)
+
+---
+
+## 💭 Reflection
+
+This room demonstrated how classic web vulnerabilities can still be highly effective when combined thoughtfully.  
+Rather than relying on obscure or protocol-level flaws, **Injectics** focused on chaining well-known issues into a complete compromise of the application and underlying system.
+
+The attack path progressed through:
+- **Information disclosure** via exposed log files
+- **SQL Injection** caused by insufficient server-side input validation
+- Abuse of **application recovery mechanisms** that restore default credentials
+- **Server-Side Template Injection (SSTI)** leading to full **Remote Code Execution (RCE)**
+
+What made this room particularly valuable was how it highlighted the dangers of trusting client-side controls and assuming that “self-healing” mechanisms improve security.
+
+---
+
+### Key Takeaways
+
+- **Client-side filtering provides no real security** and can be trivially bypassed with request manipulation.
+- **Exposed logs and configuration files** often contain high-value information such as credentials.
+- **Automatic recovery mechanisms** can be abused to force applications back into a predictable, vulnerable state.
+- **SSTI vulnerabilities are extremely dangerous**, as they often lead directly to remote code execution.
+- Chaining multiple medium-impact issues can result in **full system compromise**.
+
+---
+
+### Lessons Learned
+
+- **All input validation must be enforced server-side**, regardless of client-side restrictions.
+- **Sensitive files (logs, backups, configs)** should never be publicly accessible.
+- **Template engines must be sandboxed properly** or user input must never be rendered directly.
+- **Defense-in-depth is critical**: relying on a single protection layer (e.g., client-side filters) creates a false sense of security.
+- Even common vulnerabilities like SQLi remain highly impactful when combined with poor architectural decisions.
+
+This room reinforced the importance of methodical analysis and vulnerability chaining, showing how an attacker can progress from a simple injection flaw to full remote code execution when multiple weaknesses coexist.
+
