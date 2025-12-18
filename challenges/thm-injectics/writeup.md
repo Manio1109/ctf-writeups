@@ -286,7 +286,7 @@ This step concluded the exploitation process, demonstrating how chained web vuln
 
 📸 [screenshots](../../challenges/thm-injectics/screenshots.md)
 
-🔗 [TryHackMe - El bandito](https://tryhackme.com/room/injectics)
+🔗 [TryHackMe - Injectics](https://tryhackme.com/room/injectics)
 
 ---
 
