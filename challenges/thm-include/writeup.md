@@ -23,10 +23,10 @@ These write-ups are meant to demonstrate practical offensive security skills rel
 This challenge requires combining **Prototype Pollution**, **SSRF**, **LFI/Path Traversal**, and finally **SSH brute force** to gain full system access.
 
 **Key themes:**
-- 🧩 **Prototype Pollution → privilege escalation**  
-- 🌐 **SSRF to reach internal-only APIs**  
-- 📂 **Local File Inclusion & Path Traversal**  
-- 🔑 **Credential decoding & SSH brute forcing**
+- **Prototype Pollution → privilege escalation**  
+- **SSRF to reach internal-only APIs**  
+- **Local File Inclusion & Path Traversal**  
+- **Credential decoding & SSH brute forcing**
 
 This write-up is part of my offensive security portfolio and follows a clear, structured pentesting methodology similar to my *El Bandito* documentation.
 
