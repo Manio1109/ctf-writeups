@@ -1,4 +1,9 @@
-# Python Script Exploit — PIN Brute Force
+# Portfolio — TryHackMe: *Hammer*
+
+**Difficulty:** 🟠 Medium  
+**Core areas:** Authentication bypass, Python scripting, brute-force attacks, JWT token manipulation, privilege escalation, command execution.
+
+---
 
 ## 1) Python exploit — 4-digit PIN brute force
 ![Python Exploit](/images/pythonscript_exploit.py.png)
