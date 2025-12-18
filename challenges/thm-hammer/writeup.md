@@ -256,7 +256,7 @@ THM{REDACTED}
 
 📸 [**Screenshots**](../../challenges/thm-hammer/screenshots.md)
 
-🔗 [**TryHackMe Room**](https://tryhackme.com/room/hammer)
+🔗 [**TryHackMe-Hammer**](https://tryhackme.com/room/hammer)
 
 ---
 
