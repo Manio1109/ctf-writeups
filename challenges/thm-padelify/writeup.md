@@ -62,10 +62,51 @@ nmap -Pn 10.67.171.240
 | 22   | SSH     |
 | 80   | HTTP    |
 
-I navigated to `http://10.67.171.240` and discovered a registration and login page.  
-Registration required moderator approval, indicating a manual verification workflow.  
-Interestingly, logging in with the credentials `test:test` succeeded, suggesting either a misconfiguration or leftover test account.  
-Since this behavior was not required for exploitation, I continued with the main challenge.
+#### Analysis
+**The scan revealed two open services:**
+- **Port 22 (SSH)** – Remote administration service
+- **Port 80 (HTTP)** – Web application
+
+Since the challenge is web-focused, I proceeded to analyze the HTTP service.
+
+#### Web Application Enumeration
+**Navigating to:**
+```
+http://10.67.171.240:80
+```
+**Revealed:**
+- A registration page
+- A login page
+
+#### Registration Flow
+New account creation required **moderator approval** before activation.
+
+**This indicates:**
+- Manual user verification
+- Potential **privileged role**(moderator) managing accounts
+- Possible attack surface for **privilege escalation**
+
+#### Discovery of Weak Credentials
+**During testing, I attempted to log in using:**
+```text
+Username: test
+Password: test
+```
+The login was successful.
+
+#### Security Implications
+**This behavior suggests:**
+- A leftover development account
+- Weak credential policy
+- Possible misconfiguration
+
+**In real-world environments, such accounts are dangerous because:**
+- They are often forgotten
+- They usually have elevated privileges
+- They bypass MFA or logging
+
+**However:**
+This account was not required to complete the challenge, so I continued following the intended exploitation path.
 
 ---
 
