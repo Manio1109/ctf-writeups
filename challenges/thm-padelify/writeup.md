@@ -220,13 +220,13 @@ After confirming blind XSS, the next goal was to steal the moderator session coo
 ```
 <script>alert(1)</script>
 ```
-**Allowed**
+Allowed
 
 **Next, I tested:**
 ```
 document.cookie
 ```
-**Blocked**
+Blocked
 
 #### Conclusion
 
@@ -241,7 +241,7 @@ This confirms a **signature-based WAF.**
 #### Step 2: Bypass using string concatenation
 
 **To evade detection, I used:**
-```
+```html
 document["coo"+"kie"]
 ```
 
@@ -279,6 +279,7 @@ PHPSESSID=e1omj7ther5rnh0g5ks70vjn84
 - I fully impersonated the moderator
 - No password required
 - Session hijacking achieved
+
 **Privilege escalation successful**
 
 ---
