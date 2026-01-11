@@ -62,7 +62,10 @@ nmap -Pn 10.67.171.240
 | 22   | SSH     |
 | 80   | HTTP    |
 
-I navigated to 10.67.171.240:80 and there was a registration page and login page. I tried to make a registrate myself but got the message that the moderator needs to approve my details. in the login page i tried test as username and password and it worked. maybe this is a bug so i left it for wat is is and when on with the challenge. 
+I navigated to `http://10.67.171.240` and discovered a registration and login page.  
+Registration required moderator approval, indicating a manual verification workflow.  
+Interestingly, logging in with the credentials `test:test` succeeded, suggesting either a misconfiguration or leftover test account.  
+Since this behavior was not required for exploitation, I continued with the main challenge.
 
 ---
 
@@ -82,7 +85,8 @@ Web Application Firewall is ACTIVE
 ---
 
 ### 3. WAF Bypass (User-Agent Spoofing)
-The firewall blocked `gobuster dir -u http://10.67.171.240/ -w /usr/share/wordlists/dirb/common.txt` because of the user-agent. so we need a legityimate looking user-agent like mozilla 5.0 
+The Web Application Firewall blocked Gobuster requests based on its default User-Agent,  
+indicating **signature-based detection**.
 
 ```bash
 gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a Mozilla/5.0
@@ -100,18 +104,27 @@ gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a M
 
 /config is blocked by the firewall but /logs is not. 
 
-**explanation why this works with mozilla/5.0?**
+**How does this work?**
+
+This works because the WAF relies on **static pattern matching**.  
+Automated tools like Gobuster use recognizable User-Agent strings.  
+By spoofing a real browser (Mozilla/5.0), we blend into normal traffic.
 
 ---
 
 ### 4. Log File Analysis
-I went to /logs and found error.log and there was some interesting information.
+
 ```lua
 /logs/error.log
 ```
-**Interesting entries:**
-- Possible encoded/obfuscated XSS payload observed
-- Failed to parse admin_info in /var/www/html/config/app.conf
+**Findings:**
+- Possible encoded XSS payload detected
+- Failed to parse admin_info in: `/var/www/html/config/app.conf`
+
+**Conclusion:**
+- XSS attempts already exist
+- Sensitive config file exists
+- WAF blocks direct access
 
 ---
 
@@ -128,7 +141,11 @@ python3 -m http.server 8000
 ```sql
 GET / HTTP/1.1
 ```
-It worked we got a response and we know there is a blind xss possible. now lets get the cookie so we can login as a moderator to retrieve the first flag.
+**What this proves:**
+- Payload stored server-side
+- Admin/moderator views it
+- Browser executes it
+- We see it remotely → Blind XSS
 
 ---
 
@@ -150,17 +167,28 @@ python3 -m http.server 9001
 ```ini
 PHPSESSID=e1omj7ther5rnh0g5ks70vjn84
 ```
-explanation why it works and how it works?
+
+**Why this works?**
+- Browser concatenates → cookie
+- WAF scans raw input
+- Does NOT see "cookie"
+- Filter bypassed
 
 ---
 
 ### 7. Moderator Access
-I changed the retrieved cookie with my cookie and refreshed the page. I was now logged in as the moderator.
+I replaced my cookie with the stolen one.
+After refreshing, I was logged in as moderator.
 
 **What is the flag value after logging in as a moderator?**
 ```text
 THM{REDACTED}
 ```
+
+**Impact:**
+- Session hijacking
+- Privilege escalation
+- Full moderator control
 
 ---
 
@@ -201,7 +229,12 @@ I fill it in the url balk and it worked.
 ```ini
 admin_info = "bL}8,S9W1o44"
 ```
-explanation why it works and how it works?
+
+**Why this works?**
+- WAF inspects RAW request
+- Does not decode URL
+- Backend decodes internally
+- Filter bypassed
 
 ---
 
@@ -217,8 +250,8 @@ THM{REDACTED}
 ## 🏁 Flags
 | Flag      | Value                    |
 | --------- | ------------------------ |
-| Moderator | THM{Logged_1n_Moderat0r} |
-| Admin     | THM{Logged_1n_Adm1n001}  |
+| Moderator | THM{REDACTED} |
+| Admin     | THM{REDACTED}  |
 
 ---
 
