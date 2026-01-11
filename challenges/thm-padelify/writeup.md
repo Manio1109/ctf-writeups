@@ -220,13 +220,13 @@ After confirming blind XSS, the next goal was to steal the moderator session coo
 ```
 <script>alert(1)</script>
 ```
-Allowed
+✔️ Allowed
 
 **Next, I tested:**
 ```
 document.cookie
 ```
-Blocked
+❌ Blocked
 
 #### Conclusion
 
@@ -280,13 +280,13 @@ PHPSESSID=e1omj7ther5rnh0g5ks70vjn84
 - No password required
 - Session hijacking achieved
 
-**Privilege escalation successful**
+**Privilege escalation successful!**
 
 ---
 
 ### 7. Moderator Access
-I replaced my cookie with the stolen one.
-After refreshing, I was logged in as moderator.
+I replaced my own session cookie with the stolen moderator cookie.
+After refreshing the page, I was logged in as the moderator account.
 
 **What is the flag value after logging in as a moderator?**
 ```text
@@ -294,46 +294,102 @@ THM{REDACTED}
 ```
 
 **Impact:**
-- Session hijacking
+- Successful session hijacking
 - Privilege escalation
-- Full moderator control
+- Full access to moderator features
 
 ---
 
-### 8. Parameter Fuzzing – LFI
-At the beginning of the challenge we found in de /logs file some information about the admin:
-- Failed to parse admin_info in /var/www/html/config/app.conf
-But the firewall is ofcourse still blocking config/app.conf
+### 8. Parameter Fuzzing – Local File Inclusion (LFI)
+From earlier log analysis, we already knew:
+- `/var/www/html/config/app.conf` contains admin credentials
 
-So i went looking around and found live.php?page=match.php what could be interesting. 
+**However:**
+- Direct access was blocked by the WAF
+- Manual browsing was not possible
 
-I tries to fuzz the page parameter to find hidden files or directories.
+#### Step 1: Discover dynamic file loading
 
+**While browsing, I found:**
+```bash
+/live.php?page=match.php
+```
+
+**This strongly suggested:**
+- The application includes files dynamically
+- User input directly controls file paths
+- High probability of LFI
+
+#### Step 2: Fuzzing the page parameter
+
+**To enumerate accessible files:**
 ```bash
 gobuster fuzz -u http://10.67.171.240/live.php?page=FUZZ -w /usr/share/wordlists/dirb/common.txt -a Mozilla/5.0 --exclude-length 1907
 ```
-**Results:**
-| Path           | Status | Notes         |
-| -------------- | ------ | ------------- |
-| /config        | 301    | Interesting   |
-| /logs          | 301    | Contains logs |
-| /css           | 301    | Bootstrap     |
-| /js            | 301    | Bootstrap     |
-| /index.php     | 200    | Homepage      |
-| /php.ini       | 403    | Blocked       |
-| /server-status | 403    | Blocked       |
+**Why exclude-length 1907?**
+- All invalid pages returned exactly 1907 bytes
+- Filtering removes noise
+- Only meaningful responses remain
 
-again i found /config and /logs. This time im trying this http://10.67.171.240/live.php?page=/config/app.conf because there is maybe some information about the admin creds. But as expected teh firewall blockes me. Thats the moment im rememberig about encoding techniques and tries URL Encoding.
+#### Step 3: Fuzzing results
+| Parameter Value        | Status | Length | Meaning                     |
+| ---------------------- | ------ | ------ | --------------------------- |
+| config                 | 200    | 1835   | Config directory accessible |
+| css                    | 200    | 1835   | Frontend assets             |
+| js                     | 200    | 1835   | JavaScript files            |
+| logs                   | 200    | 1835   | Log directory               |
+| index.php              | 200    | 5688   | Homepage                    |
+| php.ini                | 403    | 2872   | Restricted                  |
+| Documents and Settings | 400    | 321    | Windows artifact            |
+| Program Files          | 400    | 321    | Windows artifact            |
+| reports list           | 400    | 321    | Invalid path                |
+
+#### Interpretation
+
+**This confirms:**
+- Input is not sanitized
+- Server tries to load whatever we supply
+- Classic LFI vulnerability
+
+#### Step 4: Attempt to read sensitive config
+
+**Knowing the file location:**
+```html
+/var/www/html/config/app.conf
+```
+**I tried:**
+```bash
+http://10.67.171.240/live.php?page=/config/app.conf
+```
+❌ Blocked by WAF
+
+#### Why it failed
+
+**The WAF blocks:**
+- `/config/`
+- `.conf`
+**Based on:**
+- Static string detection
+- Simple blacklist rules
 
 ---
 
 ### 9. URL Encoding WAF Bypass
-I go to cyberchef and let this /config/app.conf url encoded to %2Fconfig%2Fapp%2Econf. 
-I fill it in the url balk and it worked.
+
+**I used CyberChef to URL-encode the blocked path:**
+```arduino
+/config/app.conf
+```
+**Encoded version:**
+```bash
+%2Fconfig%2Fapp%2Econf
+```
+**When Requesting:**
 ```bash
 /live.php?page=%2Fconfig%2Fapp%2Econf
 ```
-**Found some admin information**
+
+**The file was successfully loaded and revealed admin credentials:**
 ```ini
 admin_info = "bL}8,S9W1o44"
 ```
@@ -344,17 +400,28 @@ admin_info = "bL}8,S9W1o44"
 - Backend decodes internally
 - Filter bypassed
 
+**This creates a parsing discrepancy:**
+- Security layer sees: `%2Fconfig%2Fapp%2Econf`
+- Application sees: `/config/app.conf`
+
 ---
 
 ### 10. Admin Access
-I go tot the login page with the username admin and password bL}8,S9W1o44 to retrive the final flag.
+
+I navigated to the login page and authenticated using:
+
+- **Username:** admin  
+- **Password:** bL}8,S9W1o44  
+
+After logging in, I successfully retrieved the final flag.
 
 **What is the flag value after logging in as admin?**
-```
+```text
 THM{REDACTED}
 ```
 
 ---
+
 ## 🏁 Flags
 | Flag      | Value                    |
 | --------- | ------------------------ |
