@@ -422,32 +422,70 @@ THM{REDACTED}
 
 ---
 
-## 🏁 Flags
-| Flag      | Value                    |
-| --------- | ------------------------ |
-| Moderator | THM{REDACTED} |
-| Admin     | THM{REDACTED}  |
+## 🏁 Flags found
+
+| 🏷️ Flag | Technique | Impact | Value |
+|----------|------------|--------|-------|
+| Moderator Flag | Blind XSS + Session Hijacking | Account takeover → Moderator privileges | `THM{REDACTED}` |
+| Admin Flag | LFI + WAF Bypass (URL Encoding) | Credential disclosure → Full admin access | `THM{REDACTED}` |
+
+---
+
+## Room links
+
+📸 [screenshots](../../challenges/thm-padelify/screenshots.md)
+
+🔗 [TryHackMe - Padelify](https://tryhackme.com/room/padelify)
 
 ---
 
 ## 💭 Reflection
-**This room demonstrated how simple, signature-based WAFs can be bypassed using:**
-- User-Agent spoofing
-- String concatenation
-- URL encoding
-- Blind XSS showed how stored payloads can lead to full session hijacking.
-- The LFI vulnerability demonstrated how poor input validation leads to credential disclosure.
 
-**Key Takeaways:**
-- WAFs ≠ security
-- Blind XSS is extremely dangerous
-- Encoding bypasses defeat filters
-- Session hijacking = instant privesc
-- Parameter fuzzing is powerful
+This room demonstrated how **simple, signature-based Web Application Firewalls** can be systematically bypassed when attackers understand how detection mechanisms operate.  
+Instead of relying on complex zero-day exploits, the challenge focused on abusing **logic flaws, weak filtering, and trust assumptions**:
 
-**Lessons Learned:**
-- Test what is filtered
-- Break payloads apart
-- Combine vulnerabilities
-- Log files leak secrets
-- Defense-in-depth matters
+- **User-Agent spoofing** allowed automated tools to bypass naive bot detection.
+- **String concatenation** defeated keyword-based filters targeting `document.cookie`.
+- **URL encoding** exploited a decoding mismatch between the WAF and backend application.
+- **Blind XSS** highlighted how stored payloads can silently compromise privileged users.
+- **Local File Inclusion (LFI)** showed how insufficient input validation leads to direct credential disclosure.
+
+What made this room powerful was not a single vulnerability, but **how multiple medium-risk issues chained together** to achieve full system compromise.
+
+---
+
+### Key Takeaways
+
+- **WAFs ≠ security**  
+  Signature-based filtering provides a false sense of protection and is easily bypassed.
+
+- **Blind XSS is extremely dangerous**  
+  Attackers do not need direct feedback — just one privileged user loading the payload is enough.
+
+- **Encoding techniques defeat filters**  
+  Security controls must normalize input before inspection.
+
+- **Session hijacking equals instant privilege escalation**  
+  Stealing a session cookie bypasses authentication entirely.
+
+- **Parameter fuzzing is powerful**  
+  Hidden endpoints and misconfigurations are often overlooked attack vectors.
+
+---
+
+### Lessons Learned
+
+- **Always test what is actually filtered**  
+  Never assume protections work — verify them.
+
+- **Break payloads apart**  
+  Splitting keywords easily bypasses static detection engines.
+
+- **Combine vulnerabilities**  
+  Real-world attacks rarely rely on a single bug.
+
+- **Log files leak secrets**  
+  Debug data often contains sensitive paths and credentials.
+
+- **Defense-in-depth matters**  
+  One failed control should never lead to full compromise.
