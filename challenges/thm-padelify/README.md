@@ -62,9 +62,8 @@ Below is a short overview of the exploitation path:
 ---
 
 ## 🧪 Included Scripts
-
-The `scripts/` folder contains helper tools used during exploitation.  
-Example: a simple Python HTTP server to capture blind XSS callbacks and stolen cookies.
+  
+- A simple Python HTTP server to capture blind XSS callbacks and stolen cookies.
 
 ---
 
