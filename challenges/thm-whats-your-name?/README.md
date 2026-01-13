@@ -72,8 +72,8 @@ Never execute these techniques on systems you do not own or without explicit per
 ## 🔗 Useful Links
 
 - [**TryHackMe Room**](https://tryhackme.com/room/whatsyourname)  
-- [**Write‑up**](../../challenges/thm-whats-your-name?/writeup.md)  
-- [**Screenshots**](../../challenges/thm-whats-your-name?/screenshots.md)
+- [**Write‑up**](../../challenges/thm-whats-your-name/writeup.md)  
+- [**Screenshots**](../../challenges/thm-whats-your-name/screenshots.md)
 
 ---
 
