@@ -57,8 +57,7 @@ Below is a short overview of the exploitation path:
 
 ## 🧪 Included Scripts
 
-The `scripts/` folder contains helper scripts used during the exploitation.  
-Example: a minimal server returning a `101 Switching Protocols` response, used to fool the backend proxy during SSRF testing.
+ - a minimal server returning a `101 Switching Protocols` response, used to fool the backend proxy during SSRF testing.
 
 ---
 
