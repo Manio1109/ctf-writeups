@@ -57,7 +57,6 @@ Below is a short overview of the exploitation path:
 
 ## 🧪 Included Scripts
 
-The `scripts/` directory (if present) contains helper payloads used during the challenge, such as:
 - XSS cookie‑exfiltration snippet  
 - JavaScript‑based forced POST actions for privilege escalation  
 
