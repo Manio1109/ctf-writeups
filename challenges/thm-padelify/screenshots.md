@@ -1,7 +1,7 @@
 
 ## 1) Nmap scan — Basic network reconnaissance
 ![Nmap scan](/images/thm_padelify_nmap_scan.png)
-
+beschrijving: afbeelding: hier doe ik een standaar nmap scan nmap -Pn 10.67.171.240
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -11,7 +11,7 @@
 
 ## 2) Initial visit — registration page (port 80)
 ![Registration page](/images/thm_padelify_registartiepagina.png)
-
+beschrijving afbeelding: hier zie je de registratie pagina waar ik op begon
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -20,7 +20,7 @@
 ---
 
 ![Login page](/images/thm_padelify_inlogpagina.png)
-beschrijving van afbeelding: dit is de login pagina wat komt na de registartie pagina
+beschrijving van afbeelding: dit is de login pagina wat komt na de registratie pagina
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -155,7 +155,7 @@ beschrijving afbeelding: ik vind op de moderator pagina een live.php?page=mage d
 ---
 
 ![Gobuster fuzz page](/images/thm_padelify_gobuster_fuzz_page.png)
-beschrijving afbeeelding: hier gobuster fuzz ik page en vind bijvoorbeeld config
+beschrijving afbeeelding: hier gobuster fuzz ik page en vind onder amdere config
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -164,7 +164,7 @@ beschrijving afbeeelding: hier gobuster fuzz ik page en vind bijvoorbeeld config
 ---
 
 ![CyberChef encoding](/images/thm_padelify_cyberchef_encoding.png)
-
+beschrijving afbeelding: firewall blokkeerde live.php?page=config/app.conf dus url encode ik in cyberchef config/app.conf naar %2Fconfig%2Fapp%2Econf
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -173,7 +173,7 @@ beschrijving afbeeelding: hier gobuster fuzz ik page en vind bijvoorbeeld config
 ---
 
 ![Admin credentials found](/images/thm_padelify_admin_creds_gevonden.png)
-
+beschrijving afbeelding: hier zie je dat met de url encoded %2Fconfig%2Fapp%2Econf het wel werkt en ik admin credentials vind
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -182,7 +182,7 @@ beschrijving afbeeelding: hier gobuster fuzz ik page en vind bijvoorbeeld config
 ---
 
 ![Logged in as admin](/images/thm_padelify_inloggen_als_admin.png)
-
+beschrijving afbeelding: hier ben ik weer op de login pagina en veel ik de gegevens van admin in om in te loggen
 **Summary:** 
 **Role / Tools:**
 **Result:**  
@@ -191,7 +191,7 @@ beschrijving afbeeelding: hier gobuster fuzz ik page en vind bijvoorbeeld config
 ---
 
 ![Admin flag found](/images/thm_padelify_admin_flag_gevonden.png)
-
+beschrijving afbeelding: hier zie je dat ik ingelogd ben als admin en de admin flag kan zien. 
 **Summary:** 
 **Role / Tools:**
 **Result:**  
