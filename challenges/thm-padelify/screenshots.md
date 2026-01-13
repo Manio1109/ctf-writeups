@@ -1,3 +1,9 @@
+# Portfolio — TryHackMe: *Padelify* (Medium)
+
+**Difficulty:** 🟠 Medium  
+**Core areas:** Web exploitation, WAF bypass, Blind XSS, session hijacking, Local File Inclusion (LFI), input encoding evasion.
+
+---
 
 ## 1) Nmap scan — Basic network reconnaissance
 ![Nmap scan](/images/thm_padelify_nmap_scan.png)
