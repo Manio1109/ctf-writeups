@@ -59,8 +59,6 @@ Below is a short overview of the exploitation path:
 
 ## 🧪 Included Scripts / Payloads
 
-The `scripts/` folder (if included) contains:
-
 - Useful LFI payloads used during fuzzing  
 - Sample SSRF requests for internal API probing  
 - Wordlists or user lists used during SSH brute forcing  
