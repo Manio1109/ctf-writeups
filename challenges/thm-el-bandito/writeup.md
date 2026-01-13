@@ -1,4 +1,4 @@
-# 🏴‍☠️ TryHackMe: El Bandito  
+# 🛠️ TryHackMe: El Bandito  
 **Difficulty:** 🔴 Hard  
 
 ![Room Badge](https://tryhackme-badges.s3.amazonaws.com/manio11.png)
