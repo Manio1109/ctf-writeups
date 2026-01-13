@@ -59,8 +59,6 @@ Below is a brief overview of the exploitation path:
 
 ## 🧪 Included Scripts
 
-The `scripts/` directory contains helper scripts used during the challenge.  
-For example:
 - a **Python brute‑forcer** for the 4‑digit PIN reset mechanism  
 - small utilities for analyzing and forging JWT tokens  
 
