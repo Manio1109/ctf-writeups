@@ -1,4 +1,4 @@
-# 🏴‍☠️ TryHackMe: Padelify  
+# 🛠️ TryHackMe: Padelify  
 **Difficulty:** 🟠 Medium  
 
 ![Room Badge](https://tryhackme-badges.s3.amazonaws.com/manio11.png)
