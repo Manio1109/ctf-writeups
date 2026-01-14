@@ -10,7 +10,7 @@ All content is sanitized and intended for **educational & legal environments onl
 Aspiring **Junior Pentester** with a strong focus on **web application security**.  
 I actively train through realistic labs where I exploit real-world vulnerabilities, chain multiple attack vectors, and document everything professionally.
 
-My goal is to grow into a **professional red teamer / web pentester**.
+My goal is to grow into a **professional web pentester / red teamer.**
 
 ---
 
@@ -141,8 +141,23 @@ Each folder contains:
 
 ## 📜 Certifications & Learning
 
-- TryHackMe Junior Pentester path *(in progress)*  
-- eJPT *(planned)*  
+- ## 📜 Certifications
+
+- **TryHackMe – Jr Penetration Tester Certificate**   
+  Reference: THM-JRVQPZ9N5J
+  🔗 [View Certificate](https://tryhackme.com/certificate/THM-JRVQPZ9N5J)
+
+- **TryHackMe – Web Application Pentesting Certificate**  
+  Reference: THM-PLHFGJ2IZU
+   🔗 [View Certificate](https://tryhackme.com/certificate/THM-PLHFGJ2IZU)
+
+- **TryHackMe – Web Fundamentals Certificate**  
+  Reference: THM-JJCFC5OKAM
+  🔗 [View Certificate](https://tryhackme.com/certificate/THM-JJCFC5OKAM)
+
+I want to keep challenging myself by earning more real-world security certifications.  
+Eventually, I aim to obtain the **OSCP**, as it is considered one of the toughest and most respected certifications in offensive security.  
+This aligns perfectly with my goal of becoming a highly skilled professional pentester.
 
 ---
 
