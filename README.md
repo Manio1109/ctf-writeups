@@ -139,9 +139,11 @@ Each folder contains:
 
 ---
 
-## 📜 Certifications & Learning
+## 📜 Certifications
 
-- ## 📜 Certifications
+- **Cisco – Networking Basics**  
+  *Issued by Cisco*  
+🔗 [View Certificate](https://www.credly.com/badges/b07341ab-ea1f-4c33-a25b-ecd164584867/public_url)
 
 - **TryHackMe – Jr Penetration Tester Certificate**   
   Reference: THM-JRVQPZ9N5J
@@ -163,10 +165,14 @@ This aligns perfectly with my goal of becoming a highly skilled professional pen
 
 ## 🚀 Roadmap
 
-- Hack The Box retired machines  
-- Build vulnerable web apps  
-- Write custom pentest tooling  
-- PNPT / OSCP (long-term goal)  
+- **More CTFs on TryHackMe** – continue participating in challenges to sharpen hands-on pentesting skills.
+- **Hack The Box retired machines** – practice real-world pentesting scenarios and build hands-on experience.  
+- **Build vulnerable web applications** – learn how vulnerabilities arise and practice safe exploitation.  
+- **Write custom pentest tooling** – develop scripts and tools to perform pentests more efficiently.  
+- **PNPT / OSCP (long-term goal)** – earn internationally recognized certifications to validate and showcase my skills.
+
+### 🎯 Career Goal
+I am actively preparing to secure a position as a **Junior Pentester**, where I can apply my hands-on skills in a professional environment, continue learning, and contribute to real-world security assessments.
 
 ---
 
