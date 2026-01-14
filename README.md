@@ -142,8 +142,7 @@ Each folder contains:
 ## 📜 Certifications
 
 - **Cisco – Networking Basics**  
-  *Issued by Cisco*  
-🔗 [View Certificate](https://www.credly.com/badges/b07341ab-ea1f-4c33-a25b-ecd164584867/public_url)
+  *Issued by Cisco*  🔗 [View Certificate](https://www.credly.com/badges/b07341ab-ea1f-4c33-a25b-ecd164584867/public_url)
 
 - **TryHackMe – Jr Penetration Tester Certificate**   
   Reference: THM-JRVQPZ9N5J
